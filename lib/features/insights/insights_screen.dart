@@ -169,7 +169,10 @@ FlTitlesData _titles(
         showTitles: true,
         reservedSize: 26,
         interval: (n / 4).ceilToDouble().clamp(1, 1000),
-        getTitlesWidget: (v, m) => v == m.max && n > 4
+        // BarChart ignores `interval`, so thin the labels here.
+        getTitlesWidget: (v, m) =>
+            v.toInt() % (n / 4).ceil().clamp(1, 1000) != 0 ||
+                (v == m.max && n > 4)
             ? const SizedBox.shrink()
             : Text(Fmt.date(addDays(start, v.toInt())), style: style),
       ),
@@ -246,7 +249,7 @@ class _Cumulative extends StatelessWidget {
       if (spots.isNotEmpty) spots.last.y,
       if (budget > 0) budget / 100,
     ].fold(1.0, (m, v) => v > m ? v : m);
-    return _chart(
+    final chart = _chart(
       context,
       'Total spent so far ${f.money(run)}${budget > 0 ? ' against a budget of ${f.money(budget)}' : ''}',
       LineChart(
@@ -283,6 +286,27 @@ class _Cumulative extends StatelessWidget {
           ],
         ),
       ),
+    );
+    if (budget <= 0) return chart;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        chart,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
+          child: Row(
+            children: [
+              Icon(Icons.horizontal_rule, size: 18, color: p.warn),
+              const SizedBox(width: 6),
+              Text(
+                'Dashed line: budget ${f.money(budget)}',
+                style: Theme.of(context).textTheme.bodySmall
+                    ?.copyWith(color: p.muted),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

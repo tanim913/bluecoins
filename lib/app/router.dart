@@ -128,7 +128,7 @@ class _AppShellState extends ConsumerState<AppShell> {
     final i = widget.shell.currentIndex;
     return Scaffold(
       body: widget.shell,
-      floatingActionButton: i == 3
+      floatingActionButton: i != 1
           ? null
           : FloatingActionButton.extended(
               onPressed: () => showAddSheet(context),

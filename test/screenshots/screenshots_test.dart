@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:bluecoins/core/day.dart';
 import 'package:bluecoins/domain/ledger/models.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/harness.dart';
@@ -41,14 +42,24 @@ void main() {
       await h.start(dark: dark, textScale: scale, seeder: _richSeed);
 
       await h.writeScreenshot('$out/phone-$name-home.png');
-      await h.tap(find.text('Add'));
+      await tester.drag(find.byType(ListView).first, const Offset(0, -700));
+      await h.settle();
+      await h.writeScreenshot('$out/phone-$name-home-scrolled.png');
+      await tester.drag(find.byType(ListView).first, const Offset(0, 700));
+      await h.settle();
+      await h.tap(find.byTooltip('Add an expense or income'));
       await h.writeScreenshot('$out/phone-$name-add.png');
+      await h.tap(find.text('Balance').last);
+      await h.writeScreenshot('$out/phone-$name-add-balance.png');
       await tester.tapAt(const Offset(10, 10));
       await h.settle();
       await h.tap(find.text('History'));
       await h.writeScreenshot('$out/phone-$name-history.png');
       await h.tap(find.text('Insights'));
       await h.writeScreenshot('$out/phone-$name-insights.png');
+      await tester.drag(find.byType(ListView).first, const Offset(0, -900));
+      await h.settle();
+      await h.writeScreenshot('$out/phone-$name-insights-scrolled.png');
       await h.tap(find.text('More').last);
       await h.writeScreenshot('$out/phone-$name-more.png');
       await h.dispose();

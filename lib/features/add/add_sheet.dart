@@ -21,6 +21,7 @@ Future<void> showAddSheet(
   Expense? editExpense,
 }) => showModalBottomSheet<void>(
   context: context,
+  useRootNavigator: true, // cover the nav bar and scrim the whole screen
   isScrollControlled: true,
   useSafeArea: true,
   builder: (_) => AddSheet(
@@ -237,16 +238,30 @@ class _AddSheetState extends ConsumerState<AddSheet> {
               )
             else
               SegmentedButton<EntryKind>(
+                expandedInsets: EdgeInsets.zero,
+                showSelectedIcon: false,
                 segments: const [
                   ButtonSegment(
                     value: EntryKind.balance,
-                    label: Text('Balance'),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Balance', maxLines: 1),
+                    ),
                   ),
                   ButtonSegment(
                     value: EntryKind.expense,
-                    label: Text('Expense'),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Expense', maxLines: 1),
+                    ),
                   ),
-                  ButtonSegment(value: EntryKind.income, label: Text('Income')),
+                  ButtonSegment(
+                    value: EntryKind.income,
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Income', maxLines: 1),
+                    ),
+                  ),
                 ],
                 selected: {_kind},
                 onSelectionChanged: (s) => setState(() {

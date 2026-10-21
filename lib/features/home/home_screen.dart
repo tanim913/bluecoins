@@ -9,6 +9,7 @@ import '../../core/day.dart';
 import '../../core/format.dart';
 import '../../core/money.dart';
 import '../add/actions.dart';
+import '../add/add_sheet.dart';
 import '../shared/widgets.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -19,7 +20,16 @@ class HomeScreen extends ConsumerWidget {
     final o = ref.watch(overviewProvider);
     final f = ref.watch(fmtProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Bluecoins')),
+      appBar: AppBar(
+        title: const Text('Bluecoins'),
+        actions: [
+          IconButton(
+            tooltip: 'Add an expense or income',
+            icon: const Icon(Icons.add),
+            onPressed: () => showAddSheet(context, kind: EntryKind.expense),
+          ),
+        ],
+      ),
       body: o == null
           ? const Center(child: CircularProgressIndicator())
           : ListView(
@@ -153,6 +163,7 @@ class _PaceBar extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: p.track,
                             borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: cs.outline),
                           ),
                         ),
                       ),
@@ -200,12 +211,12 @@ class _PaceBar extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelLarge,
                   ),
                 ),
-                Text(
-                  '${f.money(o.cycle.spent)} of ${f.money(o.budget)}',
-                  style: Theme.of(context).textTheme.bodySmall
-                      ?.copyWith(color: p.muted),
-                ),
               ],
+            ),
+            Text(
+              '${f.money(o.cycle.spent)} of ${f.money(o.budget)} spent',
+              style: Theme.of(context).textTheme.bodySmall
+                  ?.copyWith(color: p.muted),
             ),
             if (o.prorated)
               Text(
@@ -312,6 +323,9 @@ class _TodayCardState extends ConsumerState<_TodayCard> {
             SizedBox(
               width: double.infinity,
               child: TextButton(
+                style: TextButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
                 onPressed: () => _save(null),
                 child: const Text('Nothing spent today'),
               ),

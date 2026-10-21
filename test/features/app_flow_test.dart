@@ -61,7 +61,7 @@ void main() {
   ) async {
     final h = Harness(tester);
     await h.start();
-    await h.tap(find.text('Add'));
+    await h.tap(find.byTooltip('Add an expense or income'));
     await h.tap(find.text('Expense'));
     await tester.enterText(find.byType(TextField).first, '450');
     await h.tap(find.text('Food'));
@@ -81,7 +81,7 @@ void main() {
   ) async {
     final h = Harness(tester);
     await h.start();
-    await h.tap(find.text('Add'));
+    await h.tap(find.byTooltip('Add an expense or income'));
     await tester.enterText(find.byType(TextField).first, '26 april 120330');
     await h.settle();
     expect(find.textContaining('on 26 Apr'), findsOneWidget);
@@ -96,7 +96,8 @@ void main() {
     await h.start();
     await tester.runAsync(() => h.store.saveIncome(Income(h.today, 8500000)));
     await h.settle();
-    await h.tap(find.text('Add'));
+    await h.tap(find.byTooltip('Add an expense or income'));
+    await h.tap(find.text('Balance').last);
     expect(find.textContaining('already includes'), findsOneWidget);
     await h.dispose();
   });

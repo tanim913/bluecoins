@@ -30,7 +30,7 @@ class Palette extends ThemeExtension<Palette> {
     good: Color(0xFF6FD3A8),
     warn: Color(0xFFF2C86B),
     muted: Color(0xFFC3CBE2),
-    track: Color(0xFF2B385A),
+    track: Color(0xFF232D4A),
     panel: indigo,
   );
   static const light = Palette(
@@ -220,8 +220,8 @@ ThemeData buildTheme(Brightness b) {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: s.surfaceContainerLowest,
-      border: border(s.outline),
-      enabledBorder: border(s.outline),
+      border: border(s.outline, 1),
+      enabledBorder: border(s.outline, 1),
       focusedBorder: border(s.primary, 2),
       errorBorder: border(s.error, 2),
       focusedErrorBorder: border(s.error, 2),
