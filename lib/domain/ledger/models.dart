@@ -2,9 +2,10 @@ import '../../core/day.dart';
 
 /// End-of-day balance the user typed. Null = "nothing spent today": carry the balance forward.
 class Checkin {
-  const Checkin(this.date, this.balance);
+  const Checkin(this.date, this.balance, {this.note = ''});
   final Day date;
   final int? balance;
+  final String note;
 }
 
 /// [afterCheckin]: it arrived after the balance was typed (balance excludes it).
@@ -16,18 +17,29 @@ class Income {
     this.amount, {
     this.afterCheckin = false,
     this.countsInPrevious = false,
+    this.source = 'salary',
+    this.note = '',
+    this.id = '',
   });
   final Day date;
   final int amount;
   final bool afterCheckin;
   final bool countsInPrevious;
+  final String source, note, id;
 }
 
 class Expense {
-  const Expense(this.date, this.amount, [this.categoryId]);
+  const Expense(
+    this.date,
+    this.amount, {
+    this.categoryId,
+    this.note = '',
+    this.id = '',
+  });
   final Day date;
   final int amount;
   final String? categoryId;
+  final String note, id;
 }
 
 /// Where cycles start: a payday of the month, or every N days. Exactly one is set.
