@@ -43,7 +43,9 @@ grep -q 'android.permission.INTERNET' <<<"$permissions" || fail "INTERNET missin
 pass "only expected permissions"
 
 python3 -m zipfile -e "$apk" "$work"
-if grep -rlaE 'BEGIN (RSA |EC |OPENSSH |)PRIVATE KEY|storePassword|keyPassword|service_role|sb_secret_' "$work" >/dev/null; then
+# The Supabase library itself contains the bare text "sb_secret_" (it refuses secret keys), so look
+# for the prefix followed by a real token, not the prefix alone.
+if grep -rlaE 'BEGIN [A-Z ]*PRIVATE KEY|storePassword|keyPassword|service_role|sb_secret_[A-Za-z0-9_-]{16,}' "$work" >/dev/null; then
   fail "private key, signing secret or Supabase secret key inside the APK"
 fi
 pass "no private keys or cloud secrets"

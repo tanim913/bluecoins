@@ -52,6 +52,14 @@ android {
         }
     }
 
+    // Plugins bundle tiny helper libraries for other CPUs. The app is built for 64-bit ARM only, and a
+    // stray armeabi-v7a folder would let a 32-bit phone install an APK that cannot start.
+    packaging {
+        jniLibs {
+            excludes += setOf("lib/armeabi-v7a/**", "lib/x86/**", "lib/x86_64/**")
+        }
+    }
+
     buildTypes {
         release {
             signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
