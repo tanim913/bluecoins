@@ -26,6 +26,16 @@ class Income {
   final bool afterCheckin;
   final bool countsInPrevious;
   final String source, note, id;
+
+  Income withAfter(bool v) => Income(
+    date,
+    amount,
+    afterCheckin: v,
+    countsInPrevious: countsInPrevious,
+    source: source,
+    note: note,
+    id: id,
+  );
 }
 
 class Expense {

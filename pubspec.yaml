@@ -39,3 +39,20 @@ hooks:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/OFL.txt
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
+    - family: NotoSansBengali
+      fonts:
+        - asset: assets/fonts/NotoSansBengali-Regular.ttf
+        - asset: assets/fonts/NotoSansBengali-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/NotoSansBengali-Bold.ttf
+          weight: 700
