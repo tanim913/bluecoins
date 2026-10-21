@@ -51,6 +51,9 @@ The tests use the system SQLite on Linux (see `hooks` in `pubspec.yaml`).
 tool/build_release.sh      # signed, obfuscated arm64 APK in dist/, then tool/security_audit.sh
 ```
 
+`tool/smoke_release.sh` installs the APK on a connected phone or emulator and fails if it logs a crash at
+startup (release builds shrink code, which can break plugins in ways the tests cannot see).
+
 The signing key is read from `~/.bluecoins-release/key.properties`, outside the repository.
 Back that folder up: without it no update can install over an existing install.
 
