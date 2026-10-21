@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # Store timestamps as ISO-8601 text rather than Unix seconds.
+          # Backups round-trip exactly, ordering is stable below one second,
+          # and a database opened by hand is readable.
+          store_date_time_values_as_text: true
+          named_parameters: true
