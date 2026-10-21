@@ -51,3 +51,5 @@ DESIGN.md
 .impeccable/
 config/env.json
 *.g.dart
+dist/
+build/symbols/
