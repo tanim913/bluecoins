@@ -6,7 +6,8 @@ import 'overview.dart';
 
 CellValue _t(String s) => TextCellValue(s);
 CellValue _m(int minor) => DoubleCellValue(minor / 100);
-CellValue _d(Day d) => DateCellValue(year: d.year, month: d.month, day: d.day);
+// shortcut: dates are ISO text (sorts correctly, no date number format needed); switch to real date cells if pivoting by date matters.
+CellValue _d(Day d) => TextCellValue(dayKey(d));
 String _month(Day d) => '${d.year}-${d.month.toString().padLeft(2, '0')}';
 
 final _head = CellStyle(

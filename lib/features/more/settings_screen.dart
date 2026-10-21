@@ -104,6 +104,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (ok == true) await ref.read(storeProvider).addCycleStart(today);
   }
 
+  void _say(String msg) => ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(msg)));
+
+  Future<void> _toggleReminder(bool on, {bool change = false}) async {
+    final n = ref.read(reminderProvider.notifier);
+    if (!on) {
+      await n.set(null);
+      return;
+    }
+    final cur = (ref.read(reminderProvider) ?? '21:00').split(':');
+    final t = change || ref.read(reminderProvider) == null
+        ? await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(
+              hour: int.parse(cur[0]),
+              minute: int.parse(cur[1]),
+            ),
+          )
+        : null;
+    if (t == null) return;
+    final ok = await n.set(
+      '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}',
+    );
+    if (!ok && mounted) {
+      _say(
+        'Notifications are off for Bluecoins. Turn them on in your phone settings.',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = ref.watch(snapshotProvider).value?.settings;
@@ -112,6 +143,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
     if (_s == null) _load(s);
     final mode = ref.watch(themeModeProvider);
+    final reminder = ref.watch(reminderProvider);
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
@@ -190,6 +222,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ? 'Days count as covered up to yesterday; log each expense.'
                 : 'Days count as covered up to your latest balance.',
             style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SectionTitle('Reminder and privacy'),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Daily reminder'),
+            subtitle: Text(
+              reminder == null
+                  ? 'A nudge to log your balance'
+                  : 'Every day at $reminder',
+            ),
+            value: reminder != null,
+            onChanged: (on) => _toggleReminder(on),
+          ),
+          if (reminder != null)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Reminder time'),
+              subtitle: Text(reminder),
+              trailing: const Icon(Icons.schedule),
+              onTap: () => _toggleReminder(true, change: true),
+            ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Lock the app'),
+            subtitle: const Text(
+              'Ask for your fingerprint or PIN. Also hides the app in recent apps.',
+            ),
+            value: ref.watch(lockProvider),
+            onChanged: (on) async {
+              if (!await ref.read(lockProvider.notifier).set(on) && mounted) {
+                _say(
+                  'Could not confirm your fingerprint or PIN, so the lock stays off.',
+                );
+              }
+            },
           ),
           const SectionTitle('Appearance'),
           SegmentedButton<ThemeMode>(

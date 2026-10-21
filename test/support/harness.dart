@@ -11,6 +11,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,12 +29,17 @@ class Harness {
     bool dark = true,
     double textScale = 1,
     Future<void> Function(Harness)? seeder,
+    Map<String, Object> prefs = const {},
+    List<Override> overrides = const [],
   }) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.625;
     addTearDown(tester.view.reset);
-    SharedPreferences.setMockInitialValues({'theme': dark ? 'dark' : 'light'});
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences.setMockInitialValues({
+      'theme': dark ? 'dark' : 'light',
+      ...prefs,
+    });
+    final sp = await SharedPreferences.getInstance();
     db = AppDatabase.forTesting(NativeDatabase.memory());
     store = Store(db);
     if (seeded) {
@@ -45,7 +51,8 @@ class Harness {
         child: ProviderScope(
           overrides: [
             databaseProvider.overrideWithValue(db),
-            prefsProvider.overrideWithValue(prefs),
+            prefsProvider.overrideWithValue(sp),
+            ...overrides,
             todayProvider.overrideWithValue(today),
           ],
           child: MediaQuery.withClampedTextScaling(

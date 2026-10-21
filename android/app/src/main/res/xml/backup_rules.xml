@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Auto Backup keeps only the app's database folder. Preferences (which hold the sign-in
+     session) and everything else stay out of the cloud backup. -->
+<full-backup-content>
+    <include domain="root" path="app_flutter"/>
+</full-backup-content>

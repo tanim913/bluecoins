@@ -6,7 +6,9 @@ import '../features/add/add_sheet.dart';
 import '../features/history/history_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/insights/insights_screen.dart';
+import '../features/more/backup_screen.dart';
 import '../features/more/bills_screen.dart';
+import '../features/more/import_screen.dart';
 import '../features/more/more_screen.dart';
 import '../features/more/settings_screen.dart';
 import '../features/more/what_if_screen.dart';
@@ -22,6 +24,8 @@ abstract final class Routes {
   static const whatIf = '/more/what-if';
   static const bills = '/more/bills';
   static const settings = '/more/settings';
+  static const backup = '/more/backup';
+  static const importText = '/more/import';
 }
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -85,6 +89,16 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'bills',
                     parentNavigatorKey: _rootKey,
                     builder: (_, _) => const BillsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'backup',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, _) => const BackupScreen(),
+                  ),
+                  GoRoute(
+                    path: 'import',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, _) => const ImportScreen(),
                   ),
                   GoRoute(
                     path: 'settings',

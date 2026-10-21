@@ -30,6 +30,12 @@ class MoreScreen extends ConsumerWidget {
             onTap: () => context.push(Routes.bills),
           ),
           ListTile(
+            leading: const Icon(Icons.cloud_upload_outlined),
+            title: const Text('Backup and export'),
+            subtitle: const Text('Backup file, Excel, import from text'),
+            onTap: () => context.push(Routes.backup),
+          ),
+          ListTile(
             leading: const Icon(Icons.settings_outlined),
             title: const Text('Settings'),
             subtitle: const Text('Currency, cycle, budget, theme'),
