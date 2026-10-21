@@ -53,3 +53,4 @@ config/env.json
 *.g.dart
 dist/
 build/symbols/
+android/.kotlin/
