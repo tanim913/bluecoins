@@ -2,11 +2,13 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/cloud.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../core/day.dart';
 import '../../core/format.dart';
 import '../../core/money.dart';
+import '../../data/auth.dart';
 import '../../data/database.dart';
 import '../shared/widgets.dart';
 
@@ -30,6 +32,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late Day _since = ref.read(todayProvider);
   String? _balanceError;
   bool _saving = false;
+  bool _signingIn = false;
+  String? _accountNote;
 
   @override
   void dispose() {
@@ -55,6 +59,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     }
     setState(() => _balanceError = null);
     _go(2);
+  }
+
+  /// Signs in with Google and, in the same step, pulls the account's data. A returning user
+  /// lands on Home (the router redirects once the data is here); a new one carries on setting up.
+  Future<void> _googleStart() async {
+    setState(() => _signingIn = true);
+    try {
+      await ref.read(syncProvider.notifier).signIn();
+      final snap = await ref.read(storeProvider).load();
+      if (!mounted || snap.onboarded) return;
+      setState(
+        () => _accountNote = 'Signed in. This account has no data yet, so let us set up your money.',
+      );
+      _go(1);
+    } on AuthFailure catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message)));
+      }
+    } finally {
+      if (mounted) setState(() => _signingIn = false);
+    }
   }
 
   Future<void> _finish() async {
@@ -95,9 +121,45 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             _Step(
               title: 'Know what you can spend today',
-              action: FilledButton(
-                onPressed: () => _go(1),
-                child: const Text('Get started'),
+              action: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (ref.watch(authServiceProvider) != null) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: _signingIn ? null : _googleStart,
+                        icon: _signingIn
+                            ? const SizedBox.square(
+                                dimension: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.login),
+                        label: Text(
+                          _signingIn
+                              ? 'Signing in and fetching your data...'
+                              : 'Continue with Google',
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: _signingIn ? null : () => _go(1),
+                        child: const Text('Use without an account'),
+                      ),
+                    ),
+                  ] else
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => _go(1),
+                        child: const Text('Get started'),
+                      ),
+                    ),
+                ],
               ),
               children: [
                 Text(
@@ -127,6 +189,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 child: const Text('Continue'),
               ),
               children: [
+                if (_accountNote != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Text(
+                      _accountNote!,
+                      style: t.bodyMedium?.copyWith(
+                        color: context.palette.good,
+                      ),
+                    ),
+                  ),
                 DropdownMenu<String>(
                   initialSelection: _currency,
                   label: const Text('Currency'),

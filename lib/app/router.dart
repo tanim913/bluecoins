@@ -6,6 +6,7 @@ import '../features/add/add_sheet.dart';
 import '../features/history/history_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/insights/insights_screen.dart';
+import '../features/more/account_screen.dart';
 import '../features/more/backup_screen.dart';
 import '../features/more/bills_screen.dart';
 import '../features/more/import_screen.dart';
@@ -13,6 +14,7 @@ import '../features/more/more_screen.dart';
 import '../features/more/settings_screen.dart';
 import '../features/more/what_if_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
+import 'cloud.dart';
 import 'providers.dart';
 
 abstract final class Routes {
@@ -25,6 +27,7 @@ abstract final class Routes {
   static const bills = '/more/bills';
   static const settings = '/more/settings';
   static const backup = '/more/backup';
+  static const account = '/more/account';
   static const importText = '/more/import';
 }
 
@@ -91,6 +94,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     builder: (_, _) => const BillsScreen(),
                   ),
                   GoRoute(
+                    path: 'account',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, _) => const AccountScreen(),
+                  ),
+                  GoRoute(
                     path: 'backup',
                     parentNavigatorKey: _rootKey,
                     builder: (_, _) => const BackupScreen(),
@@ -123,10 +131,32 @@ class AppShell extends ConsumerStatefulWidget {
   ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends ConsumerState<AppShell> {
+class _AppShellState extends ConsumerState<AppShell>
+    with WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState s) {
+    if (s == AppLifecycleState.resumed &&
+        ref.read(userProvider).value != null) {
+      ref.read(syncProvider.notifier).sync();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    // Also once at start, so a signed-in phone uploads what it holds soon after launch.
+    ref.read(syncProvider.notifier).schedule();
+    ref.listenManual(
+      snapshotProvider,
+      (_, _) => ref.read(syncProvider.notifier).schedule(),
+    );
     // Persist cycle starts the rule generated, so changing the rule later never moves past cycles.
     ref.listenManual(overviewProvider, fireImmediately: true, (_, o) {
       if (o == null) return;

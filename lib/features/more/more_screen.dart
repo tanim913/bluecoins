@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/cloud.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 
@@ -10,6 +11,7 @@ class MoreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider).value;
     final pending = ref.watch(overviewProvider)?.pendingBills.length ?? 0;
     return Scaffold(
       appBar: AppBar(title: const Text('More')),
@@ -28,6 +30,16 @@ class MoreScreen extends ConsumerWidget {
               pending == 0 ? 'Nothing pending' : '$pending to pay this cycle',
             ),
             onTap: () => context.push(Routes.bills),
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_circle_outlined),
+            title: const Text('Account and sync'),
+            subtitle: Text(
+              user == null
+                  ? 'Back up and sync with Google'
+                  : (user.email ?? 'Signed in'),
+            ),
+            onTap: () => context.push(Routes.account),
           ),
           ListTile(
             leading: const Icon(Icons.cloud_upload_outlined),
