@@ -19,6 +19,10 @@ class Settings extends Table with Meta {
   IntColumn get budget => integer().withDefault(const Constant(0))();
   IntColumn get baseSalary => integer().withDefault(const Constant(0))();
   TextColumn get tracking => text().withDefault(const Constant('balance'))();
+  TextColumn get displayName => text().nullable()();
+
+  /// 'male', 'female', 'other', 'private' (prefers not to say) or null (not set).
+  TextColumn get gender => text().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

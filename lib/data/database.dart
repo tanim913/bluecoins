@@ -21,7 +21,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   // Never drop data: add a step per version here, e.g. if (from < 2) await m.addColumn(...).
   @override
@@ -29,6 +29,12 @@ class AppDatabase extends _$AppDatabase {
     onCreate: (m) async {
       await m.createAll();
       await seedCategories();
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.addColumn(settings, settings.displayName);
+        await m.addColumn(settings, settings.gender);
+      }
     },
   );
 

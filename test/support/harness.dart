@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:bluecoins/app/app.dart';
+import 'package:bluecoins/app/profile.dart';
 import 'package:bluecoins/app/providers.dart';
+import 'package:bluecoins/app/updates.dart';
 import 'package:bluecoins/core/day.dart';
 import 'package:bluecoins/data/database.dart';
 import 'package:bluecoins/data/store.dart';
@@ -15,6 +17,8 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fake_profile.dart';
+
 /// A phone-sized app on an in-memory database, with a fixed "today".
 class Harness {
   Harness(this.tester, {Day? today}) : today = today ?? day(2026, 4, 27);
@@ -22,6 +26,7 @@ class Harness {
   final Day today;
   late final AppDatabase db;
   late final Store store;
+  late final SharedPreferences sharedPrefs;
   final _shot = GlobalKey();
 
   Future<void> start({
@@ -31,6 +36,8 @@ class Harness {
     Future<void> Function(Harness)? seeder,
     Map<String, Object> prefs = const {},
     List<Override> overrides = const [],
+    FakeUpdateChecker? updates,
+    FakePhotoStore? photos,
   }) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.625;
@@ -39,7 +46,7 @@ class Harness {
       'theme': dark ? 'dark' : 'light',
       ...prefs,
     });
-    final sp = await SharedPreferences.getInstance();
+    final sp = sharedPrefs = await SharedPreferences.getInstance();
     db = AppDatabase.forTesting(NativeDatabase.memory());
     store = Store(db);
     if (seeded) {
@@ -52,6 +59,12 @@ class Harness {
           overrides: [
             databaseProvider.overrideWithValue(db),
             prefsProvider.overrideWithValue(sp),
+            // Never reach the network or the camera from a test.
+            installedVersionProvider.overrideWith((_) async => '1.0.0'),
+            updateCheckerProvider.overrideWithValue(
+              updates ?? FakeUpdateChecker(),
+            ),
+            photoStoreProvider.overrideWithValue(photos ?? FakePhotoStore()),
             ...overrides,
             todayProvider.overrideWithValue(today),
           ],

@@ -11,6 +11,7 @@ import '../features/more/backup_screen.dart';
 import '../features/more/bills_screen.dart';
 import '../features/more/import_screen.dart';
 import '../features/more/more_screen.dart';
+import '../features/more/profile_screen.dart';
 import '../features/more/settings_screen.dart';
 import '../features/more/what_if_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
@@ -29,6 +30,7 @@ abstract final class Routes {
   static const settings = '/more/settings';
   static const backup = '/more/backup';
   static const account = '/more/account';
+  static const profile = '/more/profile';
   static const importText = '/more/import';
 }
 
@@ -93,6 +95,11 @@ final routerProvider = Provider<GoRouter>((ref) {
                     path: 'bills',
                     parentNavigatorKey: _rootKey,
                     builder: (_, _) => const BillsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'profile',
+                    parentNavigatorKey: _rootKey,
+                    builder: (_, _) => const ProfileScreen(),
                   ),
                   GoRoute(
                     path: 'account',

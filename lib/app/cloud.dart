@@ -9,6 +9,7 @@ import '../data/files.dart';
 import '../data/sync/supabase_remote.dart';
 import '../data/sync/sync_engine.dart';
 import 'env.dart';
+import 'profile.dart';
 import 'providers.dart';
 
 /// Null when this build has no cloud settings; tests override these with fakes.
@@ -167,6 +168,12 @@ class SyncController extends Notifier<SyncState> {
     ref.invalidate(userProvider);
   }
 
+  /// Empties the database and forgets the profile photo (it lives only on this phone).
+  Future<void> _wipePhone() async {
+    await ref.read(storeProvider).wipe();
+    await ref.read(profilePhotoProvider.notifier).remove();
+  }
+
   /// Uploads what is waiting, keeps a safety copy, signs out and empties the phone. Returns
   /// false (and does nothing) if changes could not be uploaded and [force] is not set.
   Future<bool> signOut({bool force = false}) async {
@@ -178,7 +185,7 @@ class SyncController extends Notifier<SyncState> {
     await ref.read(safetyCopyProvider)(db);
     final uid = _auth?.current?.id;
     await _auth!.signOut();
-    await ref.read(storeProvider).wipe();
+    await _wipePhone();
     if (uid != null) await SyncCursors(ref.read(prefsProvider), uid).clear();
     ref.invalidate(userProvider);
     return true;
@@ -191,7 +198,7 @@ class SyncController extends Notifier<SyncState> {
       await signOut(force: true);
     } else {
       await ref.read(safetyCopyProvider)(ref.read(databaseProvider));
-      await ref.read(storeProvider).wipe();
+      await _wipePhone();
     }
     if (ref.read(reminderProvider) != null) {
       await ref.read(reminderProvider.notifier).set(null);
@@ -202,7 +209,7 @@ class SyncController extends Notifier<SyncState> {
     await ref.read(safetyCopyProvider)(ref.read(databaseProvider));
     final uid = _auth!.current!.id;
     await _auth!.deleteAccount();
-    await ref.read(storeProvider).wipe();
+    await _wipePhone();
     await SyncCursors(ref.read(prefsProvider), uid).clear();
     ref.invalidate(userProvider);
   }

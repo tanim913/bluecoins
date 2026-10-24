@@ -1,6 +1,6 @@
 # Bluecoins privacy policy
 
-_Last updated: 2026-10-25._
+_Last updated: 2026-10-26._
 
 **Short version:** your money data stays on your phone. If you choose to sign in, an encrypted
 copy is stored in your own account so you can restore it or use another phone. We never sell or
@@ -11,9 +11,24 @@ share it, show ads, or look at your bank.
 Your balances, incomes, expenses, categories, bills, budget and settings, in a private database
 inside the app. Nothing else about you.
 
+## Your profile
+
+- You can add a **name** and a **gender** (both optional). If you are signed in they are saved in your
+  account like your other data, so they come back on a new phone. If you are not signed in they stay
+  on the phone.
+- A **profile photo** you choose is stored only on your phone, in the app's private folder. It is never
+  uploaded. If you sign in, the app can also show the photo from your Google account; that picture is
+  loaded straight from Google.
+
+## Checking for updates
+
+Once a day the app asks GitHub whether a newer release of Bluecoins exists (this reveals your phone's
+IP address to GitHub, like opening any web page). Nothing else is sent. You can turn it off in Settings >
+Tell me about new versions.
+
 ## If you sign in with Google
 
-- We receive your Google account id and email address, to create your account.
+- We receive your Google account id, email address, name and photo link, to create your account.
 - Your entries are uploaded to a Supabase database (Postgres) and are readable only by your own
   account (row-level security). The data is encrypted in transit and at rest by the host.
 - Signing in is optional. Without it nothing leaves your phone.

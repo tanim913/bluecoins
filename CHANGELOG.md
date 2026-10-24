@@ -10,3 +10,6 @@
 - "Reset the app" (Backup and export): saves a safety copy, then removes all data from the phone.
 - Moroccan dirham (MAD) added to the currencies.
 - New app icon: a glass coin on the deep navy ground.
+- Profile page (More > Profile): name, gender, email and a photo. The photo stays on the phone; name and
+  gender sync with the account. Home greets you by name.
+- "New version available" banner on Home (asks GitHub once a day; switch in Settings).

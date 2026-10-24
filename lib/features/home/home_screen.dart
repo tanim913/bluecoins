@@ -1,10 +1,15 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/glass.dart';
 import '../../app/overview.dart';
+import '../../app/profile.dart';
 import '../../app/providers.dart';
+import '../../app/router.dart';
+import '../../app/updates.dart';
 import '../../app/theme.dart';
 import '../../core/day.dart';
 import '../../core/format.dart';
@@ -20,9 +25,25 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final o = ref.watch(overviewProvider);
     final f = ref.watch(fmtProvider);
+    final profile = ref.watch(profileProvider);
     return GlassScaffold(
       appBar: AppBar(
-        title: const Text('Bluecoins'),
+        leadingWidth: 64,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20),
+          child: Center(
+            child: Semantics(
+              button: true,
+              label: 'Open your profile',
+              child: InkResponse(
+                onTap: () => context.push(Routes.profile),
+                radius: 24,
+                child: Avatar(profile, size: 36),
+              ),
+            ),
+          ),
+        ),
+        title: Text(greeting(DateTime.now(), profile.name) ?? 'Bluecoins'),
         actions: [
           IconButton(
             tooltip: 'Add an expense or income',
@@ -36,6 +57,7 @@ class HomeScreen extends ConsumerWidget {
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 112),
               children: [
+                const _UpdateBanner(),
                 _Allowance(o, f),
                 if (o.hasBudget) ...[
                   const SizedBox(height: 20),
@@ -49,6 +71,55 @@ class HomeScreen extends ConsumerWidget {
                 _Last14(o, f),
               ],
             ),
+    );
+  }
+}
+
+/// Shown when a newer release exists on GitHub. Downloading is a tap on the release page.
+class _UpdateBanner extends ConsumerWidget {
+  const _UpdateBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(updateProvider).value;
+    if (info == null || ref.watch(updateDismissedProvider) == info.version) {
+      return const SizedBox.shrink();
+    }
+    final t = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Panel(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Version ${info.version} is available', style: t.titleMedium),
+            const SizedBox(height: 4),
+            Text(
+              'Download the new APK from the release page and open it to update. Your data stays on your phone.',
+              style: t.bodySmall?.copyWith(color: context.palette.muted),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                FilledButton(
+                  onPressed: () => launchUrl(
+                    Uri.parse(info.url),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  child: const Text('Download'),
+                ),
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () => ref
+                      .read(updateDismissedProvider.notifier)
+                      .dismiss(info.version),
+                  child: const Text('Later'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app/glass.dart';
 import '../../app/cloud.dart';
+import '../../app/profile.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../shared/widgets.dart';
@@ -13,6 +14,7 @@ class MoreScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(profileProvider);
     final user = ref.watch(userProvider).value;
     final pending = ref.watch(overviewProvider)?.pendingBills.length ?? 0;
     return GlassScaffold(
@@ -24,6 +26,12 @@ class MoreScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Column(
               children: [
+                ListTile(
+                  leading: Avatar(profile, size: 32),
+                  title: Text(profile.name ?? 'Profile'),
+                  subtitle: const Text('Name, photo, gender'),
+                  onTap: () => context.push(Routes.profile),
+                ),
                 ListTile(
                   leading: const Icon(Icons.science_outlined),
                   title: const Text('What if'),

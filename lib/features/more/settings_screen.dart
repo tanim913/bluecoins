@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/glass.dart';
 import '../../app/providers.dart';
+import '../../app/updates.dart';
 import '../../core/format.dart';
 import '../../core/money.dart';
 import '../../data/database.dart';
@@ -260,6 +261,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 );
               }
             },
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Tell me about new versions'),
+            subtitle: const Text(
+              'Asks GitHub once a day if a newer release exists. Nothing else is sent.',
+            ),
+            value: ref.watch(updateCheckProvider),
+            onChanged: (on) => ref.read(updateCheckProvider.notifier).set(on),
           ),
           const SectionTitle('Appearance'),
           SegmentedButton<ThemeMode>(

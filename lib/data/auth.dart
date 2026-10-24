@@ -2,9 +2,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CloudUser {
-  const CloudUser(this.id, this.email);
+  const CloudUser(this.id, this.email, {this.name, this.photoUrl});
   final String id;
   final String? email;
+
+  /// What Google calls the person, and the link to their Google photo.
+  final String? name, photoUrl;
 }
 
 /// Signs in with Google and exchanges the Google ID token for a Supabase session.
@@ -34,7 +37,21 @@ class SupabaseAuthService implements AuthService {
   final String webClientId;
   bool _ready = false;
 
-  CloudUser? _user(User? u) => u == null ? null : CloudUser(u.id, u.email);
+  CloudUser? _user(User? u) {
+    if (u == null) return null;
+    final m = u.userMetadata;
+    String? text(String a, String b) {
+      final v = (m?[a] ?? m?[b]);
+      return v is String && v.isNotEmpty ? v : null;
+    }
+
+    return CloudUser(
+      u.id,
+      u.email,
+      name: text('full_name', 'name'),
+      photoUrl: text('avatar_url', 'picture'),
+    );
+  }
 
   @override
   CloudUser? get current => _user(_client.auth.currentUser);
