@@ -17,6 +17,6 @@ for src, out, title in [
     ("docs/PRIVACY_POLICY.md", "docs/privacy.html", "Privacy policy"),
     ("docs/delete-account.md", "docs/delete-account.html", "Delete your account"),
 ]:
-    body = markdown.markdown(open(src).read()).replace("PRIVACY_POLICY.md", "privacy.html")
+    body = markdown.markdown(open(src).read()).replace("PRIVACY_POLICY.md", "privacy.html").replace("delete-account.md", "delete-account.html")
     open(out, "w").write(PAGE.format(title=title, body=body))
 print("site pages written")
