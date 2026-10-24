@@ -47,7 +47,7 @@ class GithubUpdateChecker implements UpdateChecker {
       );
       req.headers
         ..set('Accept', 'application/vnd.github+json')
-        ..set('User-Agent', 'bluecoins-app');
+        ..set('User-Agent', 'enough-app');
       final res = await req.close().timeout(const Duration(seconds: 10));
       if (res.statusCode != 200) return null;
       final j = jsonDecode(

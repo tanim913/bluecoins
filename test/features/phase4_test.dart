@@ -31,12 +31,12 @@ void main() {
         secureWindowProvider.overrideWithValue((_) async {}),
       ],
     );
-    expect(find.text('Bluecoins is locked'), findsOneWidget);
+    expect(find.text('Enough is locked'), findsOneWidget);
     await h.tap(find.text('Unlock')); // refused
-    expect(find.text('Bluecoins is locked'), findsOneWidget);
+    expect(find.text('Enough is locked'), findsOneWidget);
     allow = true;
     await h.tap(find.text('Unlock'));
-    expect(find.text('Bluecoins is locked'), findsNothing);
+    expect(find.text('Enough is locked'), findsNothing);
     expect(find.text('You can spend'), findsOneWidget);
     await h.dispose();
   });

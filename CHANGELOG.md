@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Renamed the app from "Bluecoins" to **Enough** (an unrelated app called Bluecoins Finance already
+  exists). The app ID, your data, backups and sign-in are unchanged, so it updates in place. New icon letter.
+
 - Rebuilt from scratch: balance-first tracking, payday cycles, safe-to-spend, insights, what-if,
   bills, expenses, Excel and JSON export, text import, daily reminder, app lock.
 - Optional Google sign-in with Supabase backup and sync.

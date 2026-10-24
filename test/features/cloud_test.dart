@@ -58,7 +58,7 @@ void main() {
       await h.tap(find.text('Continue with Google'));
       // Straight to Home with the cloud data, no setup questions.
       expect(find.text('You can spend'), findsOneWidget);
-      expect(find.text('Know what you can spend today'), findsNothing);
+      expect(find.text('Do you have enough for today?'), findsNothing);
       expect((await tester.runAsync(h.store.load))!.checkins.length, 2);
       await h.dispose();
     },
@@ -104,7 +104,7 @@ void main() {
     );
     await h.tap(find.text('Continue with Google'));
     expect(find.text('Sign-in cancelled.'), findsOneWidget);
-    expect(find.text('Know what you can spend today'), findsOneWidget);
+    expect(find.text('Do you have enough for today?'), findsOneWidget);
     await h.dispose();
   });
 
@@ -133,7 +133,7 @@ void main() {
       reason: 'everything was uploaded before the wipe',
     );
     expect(
-      find.text('Know what you can spend today'),
+      find.text('Do you have enough for today?'),
       findsOneWidget,
     ); // phone is empty again
     await h.dispose();
@@ -153,7 +153,7 @@ void main() {
       await h.tap(find.text('Backup and export'));
       await h.tap(find.text('Reset the app'));
       await h.tap(find.text('Reset'));
-      expect(find.text('Know what you can spend today'), findsOneWidget);
+      expect(find.text('Do you have enough for today?'), findsOneWidget);
       expect(copies, 1);
       expect((await tester.runAsync(h.store.load))!.checkins, isEmpty);
       await h.dispose();

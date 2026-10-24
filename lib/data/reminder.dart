@@ -44,7 +44,7 @@ class ReminderService {
     await _plugin.zonedSchedule(
       id: 1,
       scheduledDate: at,
-      title: 'Bluecoins',
+      title: 'Enough',
       body: "Time to log today's balance.",
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(

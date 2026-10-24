@@ -8,9 +8,9 @@ import markdown
 
 PAGE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title} · Bluecoins</title><link rel="icon" href="icon.png"><link rel="stylesheet" href="style.css"></head>
-<body><main class="doc"><p class="back"><a href="./">&larr; Bluecoins</a></p>{body}
-<footer>Bluecoins is free and open source. <a href="https://github.com/tanim913/bluecoins">Source on GitHub</a></footer></main></body></html>
+<title>{title} · Enough</title><link rel="icon" href="icon.png"><link rel="stylesheet" href="style.css"></head>
+<body><main class="doc"><p class="back"><a href="./">&larr; Enough</a></p>{body}
+<footer>Enough is free and open source. <a href="https://github.com/tanim913/bluecoins">Source on GitHub</a></footer></main></body></html>
 """
 
 for src, out, title in [

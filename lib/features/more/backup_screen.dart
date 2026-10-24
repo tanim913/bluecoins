@@ -27,7 +27,7 @@ class BackupScreen extends ConsumerWidget {
     final stamp = dayKey(ref.read(todayProvider));
     final text = encodeBackup(await exportBackup(db));
     final shared = await shareBytes(
-      'bluecoins-backup-$stamp.json',
+      'enough-backup-$stamp.json',
       utf8.encode(text),
       'application/json',
     );
@@ -111,7 +111,7 @@ class BackupScreen extends ConsumerWidget {
     if (o == null) return;
     final bytes = buildWorkbook(o);
     await shareBytes(
-      'bluecoins-${dayKey(o.today)}.xlsx',
+      'enough-${dayKey(o.today)}.xlsx',
       bytes,
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );

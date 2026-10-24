@@ -1,4 +1,4 @@
-# Bluecoins privacy policy
+# Enough privacy policy
 
 _Last updated: 2026-10-26._
 
@@ -22,7 +22,7 @@ inside the app. Nothing else about you.
 
 ## Checking for updates
 
-Once a day the app asks GitHub whether a newer release of Bluecoins exists (this reveals your phone's
+Once a day the app asks GitHub whether a newer release of Enough exists (this reveals your phone's
 IP address to GitHub, like opening any web page). Nothing else is sent. You can turn it off in Settings >
 Tell me about new versions.
 
@@ -51,7 +51,7 @@ prompt if you turn the app lock on.
 
 ## Children
 
-Bluecoins is not aimed at children under 13.
+Enough is not aimed at children under 13.
 
 ## Changes
 

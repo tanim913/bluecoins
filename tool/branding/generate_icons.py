@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Renders every launcher icon from one mark: a glass coin with a navy B on the app's deep navy ground.
+"""Renders every launcher icon from one mark: a glass coin with a navy E on the app's deep navy ground.
 
 Run from the repo root:  python3 tool/branding/generate_icons.py
 Needs Pillow. The letter uses the bundled Noto Sans Bold (SIL OFL).
@@ -65,7 +65,7 @@ def mark(size, coin=0.62, shadow=True, mono=False):
     out = Image.alpha_composite(out, layer)
     font = ImageFont.truetype(FONT, int(r * 1.12))
     letter = Image.new("L", (s, s), 0)
-    ImageDraw.Draw(letter).text((c, c + r * 0.02), "B", font=font, anchor="mm", fill=255)
+    ImageDraw.Draw(letter).text((c, c + r * 0.02), "E", font=font, anchor="mm", fill=255)
     if mono:  # themed icon: the letter is a hole
         out.putalpha(ImageChops.subtract(out.getchannel("A"), letter))
     else:

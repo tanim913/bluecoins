@@ -43,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ),
-        title: Text(greeting(DateTime.now(), profile.name) ?? 'Bluecoins'),
+        title: Text(greeting(DateTime.now(), profile.name) ?? 'Enough'),
         actions: [
           IconButton(
             tooltip: 'Add an expense or income',

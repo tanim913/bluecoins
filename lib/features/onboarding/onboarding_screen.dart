@@ -121,7 +121,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             _Step(
-              title: 'Know what you can spend today',
+              title: 'Do you have enough for today?',
               action: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -164,7 +164,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
               children: [
                 Text(
-                  'One balance a day is all you type. Bluecoins works out the rest.',
+                  'One balance a day is all you type. Enough works out the rest.',
                   style: t.bodyLarge,
                 ),
                 const SizedBox(height: 24),

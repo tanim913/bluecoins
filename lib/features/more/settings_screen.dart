@@ -132,7 +132,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
     if (!ok && mounted) {
       _say(
-        'Notifications are off for Bluecoins. Turn them on in your phone settings.',
+        'Notifications are off for Enough. Turn them on in your phone settings.',
       );
     }
   }

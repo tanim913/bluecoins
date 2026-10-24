@@ -11,12 +11,12 @@ void main() {
     (tester) async {
       final h = Harness(tester);
       await h.start(seeded: false);
-      expect(find.text('Know what you can spend today'), findsOneWidget);
+      expect(find.text('Do you have enough for today?'), findsOneWidget);
       await h.tap(find.text('Get started'));
       await tester.enterText(find.byType(TextField).first, '125000');
       await h.tap(find.text('Continue'));
       await h.tap(find.text('Start tracking'));
-      expect(find.text('Bluecoins'), findsWidgets);
+      expect(find.text('Enough'), findsWidgets);
       final snap = await tester.runAsync(h.store.load);
       expect(snap!.checkins.single.balance, 12500000);
       expect(snap.settings!.payday, 1);

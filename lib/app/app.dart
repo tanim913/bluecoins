@@ -11,7 +11,7 @@ class BluecoinsApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => MaterialApp.router(
-    title: 'Bluecoins',
+    title: 'Enough',
     theme: buildTheme(Brightness.light),
     darkTheme: buildTheme(Brightness.dark),
     themeMode: ref.watch(themeModeProvider),

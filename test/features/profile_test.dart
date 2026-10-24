@@ -55,7 +55,7 @@ void main() {
   ) async {
     final h = Harness(tester);
     await h.start();
-    expect(find.text('Bluecoins'), findsOneWidget); // no name yet
+    expect(find.text('Enough'), findsOneWidget); // no name yet
     await _openProfile(h);
     await tester.enterText(find.byType(TextField).first, 'Tanim Aziz');
     await h.tap(find.text('Male'));

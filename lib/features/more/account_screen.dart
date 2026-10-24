@@ -128,7 +128,7 @@ class AccountScreen extends ConsumerWidget {
             )
           else if (user == null) ...[
             Text(
-              'Back up your data and use Bluecoins on more than one phone. Signing in is optional.',
+              'Back up your data and use Enough on more than one phone. Signing in is optional.',
               style: t.bodyLarge,
             ),
             const SizedBox(height: 12),

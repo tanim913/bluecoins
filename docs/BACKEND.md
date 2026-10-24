@@ -1,6 +1,6 @@
 # Backend runbook
 
-Bluecoins works fully without a backend. The optional cloud account uses **Supabase** (Postgres +
+Enough works fully without a backend. The optional cloud account uses **Supabase** (Postgres +
 Auth) on its free plan. This page is for the person running it.
 
 ## What lives where

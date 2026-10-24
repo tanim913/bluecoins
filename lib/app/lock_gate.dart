@@ -51,7 +51,7 @@ class _LockGateState extends ConsumerState<LockGate>
   Future<void> _unlock() async {
     if (_asking) return;
     _asking = true;
-    final ok = await ref.read(authProvider)('Unlock Bluecoins');
+    final ok = await ref.read(authProvider)('Unlock Enough');
     _asking = false;
     if (ok && mounted) setState(() => _locked = false);
   }
@@ -75,7 +75,7 @@ class _LockGateState extends ConsumerState<LockGate>
                       const Icon(Icons.lock_outline, size: 48),
                       const SizedBox(height: 16),
                       Text(
-                        'Bluecoins is locked',
+                        'Enough is locked',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 24),

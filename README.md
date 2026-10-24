@@ -1,12 +1,12 @@
-# Bluecoins
+# Enough
 
-Track your money with **one balance a day**. Type what you have left; Bluecoins works out what you
+Track your money with **one balance a day**. Type what you have left; Enough works out what you
 spent, your daily average, what you can safely spend today, your savings and where you will end
 the month. Free, open source, no ads, no bank login. Works offline. Signing in with Google is
 optional and only backs your data up and syncs your phones.
 
-> "Bluecoins" is a working name. An unrelated app called Bluecoins Finance exists on the stores,
-> so pick a different name before publishing this one.
+> Enough was called "Bluecoins" before version 1.0.2. The repository and website address still use the
+> old name, so existing links keep working.
 
 ## What it does
 

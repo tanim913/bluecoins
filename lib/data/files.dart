@@ -32,7 +32,7 @@ Future<File> writeSafetyCopy(AppDatabase db) async {
       .replaceAll(':', '-')
       .split('.')
       .first;
-  final file = await File('${dir.path}/bluecoins-safety-$stamp.json')
+  final file = await File('${dir.path}/enough-safety-$stamp.json')
       .writeAsString(encodeBackup(await exportBackup(db)), flush: true);
   final all = dir.listSync().whereType<File>().toList()
     ..sort((a, b) => b.path.compareTo(a.path));

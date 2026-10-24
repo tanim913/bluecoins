@@ -23,7 +23,7 @@ Future<Map<String, Object?>> exportBackup(
     tables[t.actualTableName] = [for (final r in rows) r.data];
   }
   return {
-    'app': 'bluecoins',
+    'app': 'bluecoins', // kept from the first name so older backup files still restore
     'version': backupVersion,
     'exportedAt': (now ?? DateTime.now()).toUtc().toIso8601String(),
     'tables': tables,
@@ -49,15 +49,15 @@ BackupPreview parseBackup(AppDatabase db, String text) {
   try {
     json = jsonDecode(text);
   } on FormatException {
-    throw const FormatException('This file is not a Bluecoins backup.');
+    throw const FormatException('This file is not an Enough backup.');
   }
   if (json is! Map || json['app'] != 'bluecoins' || json['tables'] is! Map) {
-    throw const FormatException('This file is not a Bluecoins backup.');
+    throw const FormatException('This file is not an Enough backup.');
   }
   final version = json['version'];
   if (version is! int || version > backupVersion) {
     throw const FormatException(
-      'This backup was made by a newer version of Bluecoins. Update the app first.',
+      'This backup was made by a newer version of Enough. Update the app first.',
     );
   }
   final raw = json['tables'] as Map;

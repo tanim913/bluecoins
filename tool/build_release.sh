@@ -20,7 +20,7 @@ flutter build apk --release --target-platform android-arm64 --obfuscate --split-
 
 OUT="dist/v$VERSION"
 rm -rf "$OUT"; mkdir -p "$OUT"
-cp build/app/outputs/flutter-apk/app-release.apk "$OUT/bluecoins-v$VERSION-arm64-v8a.apk"
-STRICT=1 tool/security_audit.sh "$OUT/bluecoins-v$VERSION-arm64-v8a.apk"
-(cd "$OUT" && sha256sum ./*.apk | sed 's# \./# #' > "bluecoins-v$VERSION-sha256sums.txt")
+cp build/app/outputs/flutter-apk/app-release.apk "$OUT/enough-v$VERSION-arm64-v8a.apk"
+STRICT=1 tool/security_audit.sh "$OUT/enough-v$VERSION-arm64-v8a.apk"
+(cd "$OUT" && sha256sum ./*.apk | sed 's# \./# #' > "enough-v$VERSION-sha256sums.txt")
 echo; echo "Built v$VERSION in $OUT (keep build/symbols/v$VERSION to read crash traces):"; ls -lh "$OUT"
