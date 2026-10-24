@@ -184,6 +184,20 @@ class SyncController extends Notifier<SyncState> {
     return true;
   }
 
+  /// Back to a fresh install: safety copy, empty the phone, reminder off. A signed-in account
+  /// is signed out and its cloud copy stays, so signing in again brings the data back.
+  Future<void> resetApp() async {
+    if (_auth?.current != null) {
+      await signOut(force: true);
+    } else {
+      await ref.read(safetyCopyProvider)(ref.read(databaseProvider));
+      await ref.read(storeProvider).wipe();
+    }
+    if (ref.read(reminderProvider) != null) {
+      await ref.read(reminderProvider.notifier).set(null);
+    }
+  }
+
   Future<void> deleteAccount() async {
     await ref.read(safetyCopyProvider)(ref.read(databaseProvider));
     final uid = _auth!.current!.id;

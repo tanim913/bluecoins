@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/cloud.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
@@ -113,7 +114,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    return Scaffold(
+    return GlassScaffold(
       body: SafeArea(
         child: PageView(
           controller: _page,

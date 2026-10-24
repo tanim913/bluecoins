@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../core/day.dart';
@@ -24,11 +25,13 @@ Future<void> showAddSheet(
   useRootNavigator: true, // cover the nav bar and scrim the whole screen
   isScrollControlled: true,
   useSafeArea: true,
-  builder: (_) => AddSheet(
-    kind: kind,
-    editCheckin: editCheckin,
-    editIncome: editIncome,
-    editExpense: editExpense,
+  builder: (_) => GlassSheet(
+    child: AddSheet(
+      kind: kind,
+      editCheckin: editCheckin,
+      editIncome: editIncome,
+      editExpense: editExpense,
+    ),
   ),
 );
 

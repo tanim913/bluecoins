@@ -15,6 +15,7 @@ import '../features/more/settings_screen.dart';
 import '../features/more/what_if_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import 'cloud.dart';
+import 'glass.dart';
 import 'providers.dart';
 
 abstract final class Routes {
@@ -171,6 +172,7 @@ class _AppShellState extends ConsumerState<AppShell>
   Widget build(BuildContext context) {
     final i = widget.shell.currentIndex;
     return Scaffold(
+      extendBody: true, // lists scroll under the frosted bar
       body: widget.shell,
       floatingActionButton: i != 1
           ? null
@@ -179,33 +181,58 @@ class _AppShellState extends ConsumerState<AppShell>
               icon: const Icon(Icons.add),
               label: const Text('Add'),
             ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: i,
-        onDestinationSelected: (n) =>
-            widget.shell.goBranch(n, initialLocation: n == i),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.insights_outlined),
-            selectedIcon: Icon(Icons.insights),
-            label: 'Insights',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view),
-            label: 'More',
-          ),
-        ],
+      bottomNavigationBar: _GlassNav(
+        child: NavigationBar(
+          selectedIndex: i,
+          onDestinationSelected: (n) =>
+              widget.shell.goBranch(n, initialLocation: n == i),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.receipt_long_outlined),
+              selectedIcon: Icon(Icons.receipt_long),
+              label: 'History',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.insights_outlined),
+              selectedIcon: Icon(Icons.insights),
+              label: 'Insights',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.grid_view_outlined),
+              selectedIcon: Icon(Icons.grid_view),
+              label: 'More',
+            ),
+          ],
+        ),
       ),
     );
   }
+}
+
+/// The floating frosted bar from the reference design.
+class _GlassNav extends StatelessWidget {
+  const _GlassNav({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    top: false,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      child: Glass(
+        blur: true,
+        radius: BorderRadius.circular(30),
+        child: MediaQuery.removePadding(
+          context: context,
+          removeBottom: true,
+          child: child,
+        ),
+      ),
+    ),
+  );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../app/glass.dart';
 import '../../app/theme.dart';
 import '../../core/day.dart';
 import '../../core/money.dart';
@@ -16,14 +17,9 @@ class Panel extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => SizedBox(
     width: double.infinity,
-    padding: padding,
-    decoration: BoxDecoration(
-      color: context.palette.panel,
-      borderRadius: BorderRadius.circular(24),
-    ),
-    child: child,
+    child: Glass(padding: padding, child: child),
   );
 }
 

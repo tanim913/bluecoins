@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../core/day.dart';
 import '../../data/database.dart';
@@ -16,10 +17,12 @@ class BillsScreen extends ConsumerWidget {
     final store = ref.read(storeProvider);
     final t = Theme.of(context).textTheme;
     if (o == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const GlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
     final cycleKey = dayKey(o.cycle.start);
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Bills')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _edit(context, ref),
@@ -85,64 +88,68 @@ class BillsScreen extends ConsumerWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          0,
-          20,
-          24 + MediaQuery.viewInsetsOf(ctx).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              bill == null ? 'New bill' : 'Edit bill',
-              style: Theme.of(ctx).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: name,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Name (gym, internet...)',
+      builder: (ctx) => GlassSheet(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            0,
+            20,
+            24 + MediaQuery.viewInsetsOf(ctx).bottom,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                bill == null ? 'New bill' : 'Edit bill',
+                style: Theme.of(ctx).textTheme.titleLarge,
               ),
-            ),
-            const SizedBox(height: 12),
-            AmountField(controller: amount, label: 'Amount per cycle'),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                if (bill != null)
-                  TextButton(
+              const SizedBox(height: 16),
+              TextField(
+                controller: name,
+                autofocus: true,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: const InputDecoration(
+                  labelText: 'Name (gym, internet...)',
+                ),
+              ),
+              const SizedBox(height: 12),
+              AmountField(controller: amount, label: 'Amount per cycle'),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  if (bill != null)
+                    TextButton(
+                      onPressed: () {
+                        store.deleteBill(bill.id);
+                        Navigator.pop(ctx);
+                      },
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(
+                          color: Theme.of(ctx).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  const Spacer(),
+                  FilledButton(
                     onPressed: () {
-                      store.deleteBill(bill.id);
+                      final v = positiveMoney(amount.text);
+                      if (name.text.trim().isEmpty || v == null) return;
+                      store.saveBill(
+                        id: bill?.id ?? '',
+                        name: name.text.trim(),
+                        amount: v,
+                        paidForCycle: bill?.paidForCycle,
+                      );
                       Navigator.pop(ctx);
                     },
-                    child: Text(
-                      'Delete',
-                      style: TextStyle(color: Theme.of(ctx).colorScheme.error),
-                    ),
+                    child: const Text('Save'),
                   ),
-                const Spacer(),
-                FilledButton(
-                  onPressed: () {
-                    final v = positiveMoney(amount.text);
-                    if (name.text.trim().isEmpty || v == null) return;
-                    store.saveBill(
-                      id: bill?.id ?? '',
-                      name: name.text.trim(),
-                      amount: v,
-                      paidForCycle: bill?.paidForCycle,
-                    );
-                    Navigator.pop(ctx);
-                  },
-                  child: const Text('Save'),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     ).whenComplete(() {

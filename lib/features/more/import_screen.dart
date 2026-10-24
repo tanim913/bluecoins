@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../core/format.dart';
@@ -61,7 +62,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     final r = _parse();
     final t = Theme.of(context).textTheme;
     final f = ref.watch(fmtProvider);
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Import from text')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),

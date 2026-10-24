@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/overview.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final o = ref.watch(overviewProvider);
     final f = ref.watch(fmtProvider);
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(
         title: const Text('Bluecoins'),
         actions: [
@@ -344,31 +345,34 @@ class _Rows extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = o.cycle;
-    return Column(
-      children: [
-        StatRow('Balance now', f.money(o.balance)),
-        const Divider(),
-        StatRow(
-          'Spent this cycle',
-          f.money(c.spent),
-          note: 'Net of income${c.estimated ? ', partly estimated' : ''}',
-        ),
-        const Divider(),
-        StatRow(
-          'Average per day',
-          f.money(c.avgPerDay),
-          note: c.daysTracked > 0 ? 'over ${c.daysTracked} days' : null,
-        ),
-        if (o.pendingBills.isNotEmpty) ...[
+    return Panel(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      child: Column(
+        children: [
+          StatRow('Balance now', f.money(o.balance)),
           const Divider(),
           StatRow(
-            'Bills still to pay',
-            f.money(o.pendingTotal),
-            note: '${o.pendingBills.length} pending',
-            color: context.palette.warn,
+            'Spent this cycle',
+            f.money(c.spent),
+            note: 'Net of income${c.estimated ? ', partly estimated' : ''}',
           ),
+          const Divider(),
+          StatRow(
+            'Average per day',
+            f.money(c.avgPerDay),
+            note: c.daysTracked > 0 ? 'over ${c.daysTracked} days' : null,
+          ),
+          if (o.pendingBills.isNotEmpty) ...[
+            const Divider(),
+            StatRow(
+              'Bills still to pay',
+              f.money(o.pendingTotal),
+              note: '${o.pendingBills.length} pending',
+              color: context.palette.warn,
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

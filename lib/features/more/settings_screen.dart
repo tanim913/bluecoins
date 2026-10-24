@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../core/format.dart';
 import '../../core/money.dart';
@@ -139,12 +140,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     final s = ref.watch(snapshotProvider).value?.settings;
     if (s == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const GlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
     if (_s == null) _load(s);
     final mode = ref.watch(themeModeProvider);
     final reminder = ref.watch(reminderProvider);
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),

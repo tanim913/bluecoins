@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/overview.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
@@ -26,12 +27,14 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
     final o = ref.watch(overviewProvider);
     final f = ref.watch(fmtProvider);
     if (o == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const GlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
     final i = (_picked ?? o.index).clamp(0, o.cycles.length - 1);
     final c = o.cycles[i];
     final t = Theme.of(context).textTheme;
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Insights')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 112),
@@ -104,26 +107,29 @@ class _Summary extends StatelessWidget {
   final Fmt f;
 
   @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      StatRow('Spent', f.money(c.spent), note: 'Net of income'),
-      const Divider(),
-      StatRow('Income', f.money(c.income)),
-      const Divider(),
-      StatRow(
-        'Average per day',
-        f.money(c.avgPerDay),
-        note: c.daysTracked > 0 ? 'over ${c.daysTracked} days' : null,
-      ),
-      const Divider(),
-      StatRow(
-        'Saved',
-        f.signed(c.saved),
-        note: c.savedPercent == null
-            ? null
-            : '${c.savedPercent!.toStringAsFixed(0)}% of income',
-      ),
-    ],
+  Widget build(BuildContext context) => Panel(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+    child: Column(
+      children: [
+        StatRow('Spent', f.money(c.spent), note: 'Net of income'),
+        const Divider(),
+        StatRow('Income', f.money(c.income)),
+        const Divider(),
+        StatRow(
+          'Average per day',
+          f.money(c.avgPerDay),
+          note: c.daysTracked > 0 ? 'over ${c.daysTracked} days' : null,
+        ),
+        const Divider(),
+        StatRow(
+          'Saved',
+          f.signed(c.saved),
+          note: c.savedPercent == null
+              ? null
+              : '${c.savedPercent!.toStringAsFixed(0)}% of income',
+        ),
+      ],
+    ),
   );
 }
 

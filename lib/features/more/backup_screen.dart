@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../app/glass.dart';
+import '../../app/cloud.dart';
 import '../../app/providers.dart';
 import '../../app/router.dart';
 import '../../app/xlsx_export.dart';
@@ -11,6 +13,7 @@ import '../../core/day.dart';
 import '../../core/format.dart';
 import '../../data/backup.dart';
 import '../../data/files.dart';
+import '../shared/widgets.dart';
 
 class BackupScreen extends ConsumerWidget {
   const BackupScreen({super.key});
@@ -72,6 +75,37 @@ class BackupScreen extends ConsumerWidget {
     if (context.mounted) _say(context, 'Backup restored.');
   }
 
+  Future<void> _reset(BuildContext context, WidgetRef ref) async {
+    final signedIn = ref.read(userProvider).value != null;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Reset the app?'),
+        content: Text(
+          'All balances, expenses, incomes, bills and settings on this phone are removed and the app starts over. '
+          '${signedIn ? 'You are signed out; your account keeps its cloud copy. ' : ''}'
+          'A safety copy of your data is saved first.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+              foregroundColor: Theme.of(ctx).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await ref.read(syncProvider.notifier).resetApp();
+  }
+
   Future<void> _excel(BuildContext context, WidgetRef ref) async {
     final o = ref.read(overviewProvider);
     if (o == null) return;
@@ -87,7 +121,7 @@ class BackupScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final last = ref.watch(lastBackupProvider);
     final t = Theme.of(context).textTheme;
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Backup and export')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
@@ -101,32 +135,49 @@ class BackupScreen extends ConsumerWidget {
               style: t.bodyMedium,
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.save_alt),
-            title: const Text('Save a backup file'),
-            subtitle: const Text(
-              'Everything, as one file you can keep anywhere.',
+          Panel(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.save_alt),
+                  title: const Text('Save a backup file'),
+                  subtitle: const Text(
+                    'Everything, as one file you can keep anywhere.',
+                  ),
+                  onTap: () => _export(context, ref),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.restore),
+                  title: const Text('Restore from a backup file'),
+                  subtitle: const Text('Replaces what is on this phone.'),
+                  onTap: () => _restore(context, ref),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.table_chart_outlined),
+                  title: const Text('Export to Excel'),
+                  subtitle: const Text('Full history, cycle table and charts.'),
+                  onTap: () => _excel(context, ref),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.content_paste),
+                  title: const Text('Import from text'),
+                  subtitle: const Text('Paste lines like "26 april, 123720".'),
+                  onTap: () => context.push(Routes.importText),
+                ),
+                const Divider(),
+                ListTile(
+                  leading: Icon(
+                    Icons.delete_forever_outlined,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                  title: const Text('Reset the app'),
+                  subtitle: const Text('Removes all data from this phone.'),
+                  onTap: () => _reset(context, ref),
+                ),
+              ],
             ),
-            onTap: () => _export(context, ref),
-          ),
-          ListTile(
-            leading: const Icon(Icons.restore),
-            title: const Text('Restore from a backup file'),
-            subtitle: const Text('Replaces what is on this phone.'),
-            onTap: () => _restore(context, ref),
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.table_chart_outlined),
-            title: const Text('Export to Excel'),
-            subtitle: const Text('Full history, cycle table and charts.'),
-            onTap: () => _excel(context, ref),
-          ),
-          ListTile(
-            leading: const Icon(Icons.content_paste),
-            title: const Text('Import from text'),
-            subtitle: const Text('Paste lines like "26 april, 123720".'),
-            onTap: () => context.push(Routes.importText),
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../core/day.dart';
@@ -25,7 +26,9 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final store = ref.read(storeProvider);
     final t = Theme.of(context).textTheme;
     if (snap == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const GlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
     final ledger = snap.ledger;
     final spentAt = {for (final s in ledger.segments) s.to: s};
@@ -148,7 +151,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     final shown = rows.where((r) => !_hidden.contains(r.key)).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('History')),
       body: shown.isEmpty
           ? Center(

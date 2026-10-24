@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'glass.dart';
 import 'providers.dart';
 
 /// Covers the app with a lock screen at launch and after 20 s in the background, when the
@@ -65,7 +66,7 @@ class _LockGateState extends ConsumerState<LockGate>
         widget.child,
         if (_locked)
           Positioned.fill(
-            child: Scaffold(
+            child: GlassScaffold(
               body: SafeArea(
                 child: Center(
                   child: Column(

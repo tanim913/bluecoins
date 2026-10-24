@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/cloud.dart';
 import '../../app/theme.dart';
 import '../../data/auth.dart';
@@ -113,7 +114,7 @@ class AccountScreen extends ConsumerWidget {
     final pending = ref.watch(pendingProvider).value ?? 0;
     final t = Theme.of(context).textTheme;
     final muted = t.bodyMedium?.copyWith(color: context.palette.muted);
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('Account and sync')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 40),

@@ -12,6 +12,7 @@ const currencies = {
   'GBP': '£',
   'AED': 'AED ',
   'SAR': 'SAR ',
+  'MAD': 'MAD ',
   'MYR': 'RM ',
   'SGD': r'S$',
   'CAD': r'C$',

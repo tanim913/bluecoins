@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../app/glass.dart';
 import '../../app/providers.dart';
 import '../../app/theme.dart';
 import '../../domain/ledger/what_if.dart';
@@ -33,7 +34,9 @@ class _WhatIfScreenState extends ConsumerState<WhatIfScreen> {
     final f = ref.watch(fmtProvider);
     final t = Theme.of(context).textTheme;
     if (o == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const GlassScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
     final w = WhatIf(o.cycle, o.balance);
     Widget out(String label, String value) => StatRow(label, value);
@@ -61,7 +64,7 @@ class _WhatIfScreenState extends ConsumerState<WhatIfScreen> {
       );
     }
 
-    return Scaffold(
+    return GlassScaffold(
       appBar: AppBar(title: const Text('What if')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 4, 20, 40),

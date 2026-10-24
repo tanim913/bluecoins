@@ -12,7 +12,6 @@ class Palette extends ThemeExtension<Palette> {
     required this.warn,
     required this.muted,
     required this.track,
-    required this.panel,
   });
 
   final Color good, warn;
@@ -23,38 +22,27 @@ class Palette extends ThemeExtension<Palette> {
   /// Empty part of a progress bar.
   final Color track;
 
-  /// Raised panel fill (the reference screenshot's #3D4B78 cards).
-  final Color panel;
-
   static const dark = Palette(
     good: Color(0xFF6FD3A8),
     warn: Color(0xFFF2C86B),
     muted: Color(0xFFC3CBE2),
-    track: Color(0xFF232D4A),
-    panel: indigo,
+    track: Color(0x59050A1C),
   );
   static const light = Palette(
     good: Color(0xFF1B7F5A),
     warn: Color(0xFF8A5A00),
     muted: Color(0xFF4F5B82),
     track: Color(0xFFD9E1F2),
-    panel: Colors.white,
   );
 
   @override
-  Palette copyWith({
-    Color? good,
-    Color? warn,
-    Color? muted,
-    Color? track,
-    Color? panel,
-  }) => Palette(
-    good: good ?? this.good,
-    warn: warn ?? this.warn,
-    muted: muted ?? this.muted,
-    track: track ?? this.track,
-    panel: panel ?? this.panel,
-  );
+  Palette copyWith({Color? good, Color? warn, Color? muted, Color? track}) =>
+      Palette(
+        good: good ?? this.good,
+        warn: warn ?? this.warn,
+        muted: muted ?? this.muted,
+        track: track ?? this.track,
+      );
 
   @override
   Palette lerp(Palette? other, double t) => other == null
@@ -64,7 +52,6 @@ class Palette extends ThemeExtension<Palette> {
           warn: Color.lerp(warn, other.warn, t)!,
           muted: Color.lerp(muted, other.muted, t)!,
           track: Color.lerp(track, other.track, t)!,
-          panel: Color.lerp(panel, other.panel, t)!,
         );
 }
 
@@ -84,16 +71,16 @@ const _darkScheme = ColorScheme(
   onSecondaryContainer: Colors.white,
   error: Color(0xFFFFB4AB),
   onError: Color(0xFF4A0F0F),
-  surface: navy,
+  surface: Color(0xFF0C1329),
   onSurface: Colors.white,
   onSurfaceVariant: Color(0xFFC3CBE2),
   outline: Color(0xFF8E9AC0),
-  outlineVariant: Color(0xFF4A5887),
-  surfaceContainerLowest: Color(0xFF232D4A),
-  surfaceContainerLow: Color(0xFF2F3D63),
-  surfaceContainer: Color(0xFF34426A),
-  surfaceContainerHigh: indigo,
-  surfaceContainerHighest: Color(0xFF47568A),
+  outlineVariant: Color(0x2EFFFFFF),
+  surfaceContainerLowest: Color(0x14FFFFFF),
+  surfaceContainerLow: Color(0xFF131C3B),
+  surfaceContainer: Color(0xFF18234A),
+  surfaceContainerHigh: Color(0xFF212D5A),
+  surfaceContainerHighest: Color(0xFF2B3868),
 );
 
 const _lightScheme = ColorScheme(
@@ -108,7 +95,7 @@ const _lightScheme = ColorScheme(
   onSecondaryContainer: navy,
   error: Color(0xFFB3261E),
   onError: Colors.white,
-  surface: Color(0xFFF4F7FC),
+  surface: Color(0xFFEDF2FB),
   onSurface: navy,
   onSurfaceVariant: Color(0xFF4F5B82),
   outline: Color(0xFF6F7BA0),
@@ -170,7 +157,7 @@ ThemeData buildTheme(Brightness b) {
     textTheme: text,
     extensions: [b == Brightness.dark ? Palette.dark : Palette.light],
     appBarTheme: AppBarTheme(
-      backgroundColor: s.surface,
+      backgroundColor: Colors.transparent,
       foregroundColor: s.onSurface,
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -178,17 +165,17 @@ ThemeData buildTheme(Brightness b) {
       titleTextStyle: text.titleLarge,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: s.surfaceContainerLowest,
+      backgroundColor: Colors.transparent,
       indicatorColor: s.secondaryContainer,
-      height: 72,
+      height: 68,
       labelTextStyle: WidgetStatePropertyAll(text.labelMedium),
       iconTheme: WidgetStatePropertyAll(IconThemeData(color: s.onSurface)),
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       backgroundColor: s.primary,
       foregroundColor: s.onPrimary,
-      elevation: 0,
-      highlightElevation: 0,
+      elevation: 6,
+      highlightElevation: 8,
       extendedTextStyle: text.labelLarge,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     ),
@@ -236,16 +223,20 @@ ThemeData buildTheme(Brightness b) {
       actionTextColor: s.primary,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(round)),
     ),
-    bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: s.surfaceContainer,
-      showDragHandle: true,
-      shape: const RoundedRectangleBorder(
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
     ),
     dialogTheme: DialogThemeData(
       backgroundColor: s.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(28),
+        side: BorderSide(color: s.outlineVariant),
+      ),
     ),
     chipTheme: ChipThemeData(
       backgroundColor: s.surfaceContainerLowest,

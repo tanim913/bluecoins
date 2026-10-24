@@ -38,6 +38,8 @@ void main() {
     ('dark-font130', true, 1.3),
   ]) {
     testWidgets('screens $name', skip: skip, (tester) async {
+      debugDisableShadows =
+          false; // tests turn shadows off; the review needs them
       final h = Harness(tester, today: day(2026, 5, 14));
       await h.start(dark: dark, textScale: scale, seeder: _richSeed);
 
@@ -62,6 +64,7 @@ void main() {
       await h.writeScreenshot('$out/phone-$name-insights-scrolled.png');
       await h.tap(find.text('More').last);
       await h.writeScreenshot('$out/phone-$name-more.png');
+      debugDisableShadows = true; // the test binding checks it is restored
       await h.dispose();
     });
   }

@@ -140,6 +140,27 @@ void main() {
   });
 
   testWidgets(
+    'Reset the app empties the phone and returns to the welcome page',
+    (tester) async {
+      final h = Harness(tester);
+      var copies = 0;
+      await h.start(
+        overrides: [
+          safetyCopyProvider.overrideWithValue((_) async => copies++),
+        ],
+      );
+      await h.tap(find.text('More').last);
+      await h.tap(find.text('Backup and export'));
+      await h.tap(find.text('Reset the app'));
+      await h.tap(find.text('Reset'));
+      expect(find.text('Know what you can spend today'), findsOneWidget);
+      expect(copies, 1);
+      expect((await tester.runAsync(h.store.load))!.checkins, isEmpty);
+      await h.dispose();
+    },
+  );
+
+  testWidgets(
     'without cloud settings the account screen explains and the welcome page has one button',
     (tester) async {
       final h = Harness(tester);
