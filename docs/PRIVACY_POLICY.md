@@ -1,6 +1,6 @@
 # Bluecoins privacy policy
 
-_Last updated: 2026-10-21. Replace the contact line before publishing._
+_Last updated: 2026-10-25._
 
 **Short version:** your money data stays on your phone. If you choose to sign in, an encrypted
 copy is stored in your own account so you can restore it or use another phone. We never sell or
@@ -44,4 +44,6 @@ Changes will be listed here with a new date.
 
 ## Contact
 
-<your contact email>
+Questions or requests: open an issue at
+[github.com/tanim913/bluecoins/issues](https://github.com/tanim913/bluecoins/issues). Do not put
+your balances or other private details in a public issue.
