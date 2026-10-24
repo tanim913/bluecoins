@@ -4,39 +4,196 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bluecoins · Know what you can spend today</title>
-<meta name="description" content="A free, open-source Android app. Type the balance you have left each day; Bluecoins works out what you spent and what is safe to spend until payday.">
+<meta name="description" content="A free, open-source Android money tracker. Type the balance you have left each day; Bluecoins works out what you spent and what is safe to spend until payday. No bank login, no ads.">
+<meta name="color-scheme" content="dark light">
 <link rel="icon" href="icon.png">
+<link rel="preload" href="fonts/NotoSans-Regular.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
-  <section class="hero">
+<a class="skip" href="#what">Skip to the answers</a>
+
+<div class="wrap">
+  <header class="hero">
     <div>
-      <img class="icon" src="icon.png" alt="Bluecoins app icon: a glass coin with the letter B">
+      <img class="icon" src="icon.png" width="72" height="72" alt="Bluecoins app icon: a glass coin with the letter B">
       <h1>Know what you can spend today</h1>
-      <p class="lead">Type the balance you have left. Bluecoins works out what you spent, your daily average, and what is safe to spend until payday. No bank login, no ads, no price.</p>
+      <p class="lead">Type the balance you have left. Bluecoins works out what you spent, your daily average, and how much is safe to spend until payday.</p>
       <a class="btn" href="https://github.com/tanim913/bluecoins/releases/latest">Download for Android</a>
-      <a class="btn quiet" href="https://github.com/tanim913/bluecoins">Source code</a>
-      <p class="note">Android 7 or newer. Download the APK, open it, and allow installs from your browser or files app when asked.</p>
+      <a class="btn quiet" href="#what">See how it works</a>
+      <p class="fine">Free, open source, no ads, no bank login, and it works without internet. Android 7 or newer.</p>
     </div>
-    <div class="shots" aria-label="Screenshots with sample data">
-      <img src="shots/dark-home.jpg" width="400" height="800" alt="Home screen in dark mode: you can spend 900 a day for the next 12 days, with a pace bar">
-      <img src="shots/dark-insights.jpg" width="400" height="800" alt="Insights screen: cycle summary and a spend-per-day chart">
+    <div class="hero-shot">
+      <img class="phone" src="shots/home.jpg" width="400" height="800" alt="The Home screen: 'Good morning, Sam. You can spend 900 a day for the next 12 days', with a progress bar and today's balance box">
     </div>
-  </section>
+  </header>
 
-  <section class="panel">
-    <dl>
-      <div><dt>One number a day</dt><dd>You do not log every coffee. Enter the balance you have left; spending is worked out from how it changed. Add expenses and categories only if you want the detail.</dd></div>
-      <div><dt>Cycles that follow your payday</dt><dd>Your month starts when you are paid, or every N days. Budget, days left and the average per day all follow your cycle.</dd></div>
-      <div><dt>Safe to spend</dt><dd>Home answers one question first: how much can I spend each day until the cycle ends.</dd></div>
-      <div><dt>What if</dt><dd>Try a scenario, such as spending less this week, and see the new numbers. Nothing is saved.</dd></div>
-      <div><dt>Yours, offline</dt><dd>Everything works without an account. Export to Excel or a backup file at any time, and lock the app with your fingerprint or PIN.</dd></div>
-      <div><dt>Backup and sync, if you want it</dt><dd>Sign in with Google to keep a copy in your own account and use another phone. Read the <a href="privacy.html">privacy policy</a>; you can <a href="delete-account.html">delete your account</a> and its data at any time.</dd></div>
-    </dl>
-  </section>
+  <div class="layout">
+    <nav class="qnav" aria-label="Questions">
+      <p>Before you install</p>
+      <ol>
+        <li><a href="#what">What does it do?</a></li>
+        <li><a href="#log">Do I write down every purchase?</a></li>
+        <li><a href="#who">Who is it for?</a></li>
+        <li><a href="#see">What will I see?</a></li>
+        <li><a href="#safe">Is my data safe?</a></li>
+        <li><a href="#lost">What if I lose my phone?</a></li>
+        <li><a href="#free">Is it really free?</a></li>
+        <li><a href="#install">How do I install it?</a></li>
+      </ol>
+    </nav>
 
-  <footer>Free and open source (MIT). Screenshots show sample data. Bluecoins is a working name.</footer>
-</main>
+    <main>
+      <section class="q" id="what">
+        <h2>What does it do?</h2>
+        <p class="answer">You tell it one number a day: the money you have left. It works out everything else.</p>
+        <p class="muted">Try it. The month below started with 125,000, the budget is 60,000, and today is day 18 of 30. Change the balance.</p>
+        <div class="glass demo">
+          <label for="bal">Balance today</label>
+          <input id="bal" inputmode="decimal" autocomplete="off" value="80000" aria-describedby="hint">
+          <p class="setup" id="hint">Any currency. You can type sums too, like 79000+1000.</p>
+          <div aria-live="polite">
+            <p class="say" id="lead">You can spend</p>
+            <div class="big" id="big">1,250</div>
+            <p class="say" id="tail">a day for the next 12 days</p>
+            <div class="bar" role="img" aria-label="75 percent of the budget spent" id="barwrap"><i id="fill" style="transform:scaleX(.75)"></i><b style="left:60%"></b></div>
+            <p class="facts"><span>Spent <strong id="spent">45,000</strong></span><span>Average <strong id="avg">2,500</strong> a day</span><span id="pace"></span></p>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:14px">The white mark is where you should be today. This is sample data, not your money.</p>
+      </section>
+
+      <section class="q" id="log">
+        <h2>Do I have to write down every purchase?</h2>
+        <p class="answer">No. That is the whole idea.</p>
+        <ul class="plain">
+          <li><strong>One number a day.</strong> Spending is worked out from how your balance changed.</li>
+          <li><strong>Forgot a few days?</strong> Type the balance when you remember. The spending is spread over the days it covers.</li>
+          <li><strong>Spent nothing?</strong> One tap on "Nothing spent today".</li>
+          <li><strong>Want detail?</strong> Add an expense with a category whenever you like. It is optional.</li>
+          <li><strong>Fast typing.</strong> The box understands sums like 1200+300, and entries like "26 april 123720".</li>
+        </ul>
+      </section>
+
+      <section class="q" id="who">
+        <h2>Who is it for?</h2>
+        <p class="answer">Anyone who gets paid, spends, and wants to stop guessing.</p>
+        <dl class="glass who">
+          <div><dt>Paid monthly</dt><dd><b>Your month starts on payday, not the 1st.</b> See what is left per day until the next salary, and how it compares with last month.</dd></div>
+          <div><dt>Students</dt><dd><b>Cycles of any length, like every 14 days.</b> Put your allowance as the budget and watch one daily number.</dd></div>
+          <div><dt>Freelancers</dt><dd><b>Log income when it arrives.</b> It is kept apart from spending, so a big payment never hides how you spend. Set a base salary to see your savings rate.</dd></div>
+          <div><dt>Shop and stall owners</dt><dd><b>Type the cash you hold at closing time.</b> Watch what goes out each day. It tracks money, not invoices or stock: it is not accounting software.</dd></div>
+          <div><dt>Anywhere in the world</dt><dd><b>Your currency, your digit grouping.</b> Taka, rupees, dollars, dirhams and more, with 1,00,000 grouping if you prefer it.</dd></div>
+        </dl>
+      </section>
+
+      <section class="q" id="see">
+        <h2>What will I see?</h2>
+        <p class="answer">The answer first, the detail one tap away.</p>
+        <div class="tour">
+          <figure><img class="phone" src="shots/home.jpg" width="400" height="800" alt="Home screen with the daily allowance and progress bar"><figcaption><b>Home</b>What you can spend today, and your pace.</figcaption></figure>
+          <figure><img class="phone" src="shots/insights.jpg" width="400" height="800" alt="Insights screen with cycle summary and spend-per-day chart"><figcaption><b>Insights</b>Spending per day, savings and each cycle.</figcaption></figure>
+          <figure><img class="phone" src="shots/history.jpg" width="400" height="800" alt="History screen listing balances, incomes and expenses"><figcaption><b>History</b>Fix or delete any entry. Everything recalculates.</figcaption></figure>
+          <figure><img class="phone" src="shots/profile.jpg" width="400" height="800" alt="Profile screen with name, gender and photo"><figcaption><b>Profile</b>Your name and photo. The photo never leaves your phone.</figcaption></figure>
+        </div>
+        <p class="muted">Also inside: a what-if tool that never saves, a list of bills to pay, charts, Excel export, a daily reminder, and a fingerprint or PIN lock. Screenshots show sample data.</p>
+      </section>
+
+      <section class="q" id="safe">
+        <h2>Is my data safe? Do I need an account?</h2>
+        <p class="answer">No account is needed. Your numbers live on your phone.</p>
+        <ul class="plain">
+          <li>No bank login, no SMS reading, no contacts, no location, no ads, no tracking.</li>
+          <li>Signing in with Google is optional. It keeps a private copy in your own account so you can use another phone.</li>
+          <li>Only you can read that copy. You can delete the account and its data from inside the app, at any time.</li>
+          <li>Turn on the lock to ask for your fingerprint or PIN, and to hide the app in the recent-apps list.</li>
+        </ul>
+        <p class="muted">Read the <a href="privacy.html">privacy policy</a> or how to <a href="delete-account.html">delete your account</a>.</p>
+      </section>
+
+      <section class="q" id="lost">
+        <h2>What if I lose my phone?</h2>
+        <p class="answer">It depends on one choice you make on the first screen.</p>
+        <ul class="plain">
+          <li><strong>You signed in with Google.</strong> Install the app on the new phone, tap <em>Continue with Google</em>, and your numbers come back.</li>
+          <li><strong>You used it without an account.</strong> Only a backup file you saved can bring it back. Save one now and then under More, Backup and export.</li>
+        </ul>
+      </section>
+
+      <section class="q" id="free">
+        <h2>Is it really free?</h2>
+        <p class="answer">Yes. No price, no ads, no subscription.</p>
+        <p>Bluecoins is open source under the MIT licence, so anyone can read the code, and it is Android only for now. Bluecoins is a working name.</p>
+        <p><a href="https://github.com/tanim913/bluecoins">See the source on GitHub</a></p>
+      </section>
+
+      <section class="q" id="install">
+        <h2>How do I install it?</h2>
+        <ol class="steps">
+          <li><strong>Download the APK</strong> from the button below, on your phone.</li>
+          <li><strong>Open it.</strong> Android asks to allow installs from your browser or files app; allow it once.</li>
+          <li><strong>Open Bluecoins</strong> and choose <em>Continue with Google</em> or <em>Use without an account</em>.</li>
+        </ol>
+        <p class="muted">When a newer version is out, the app shows a notice on Home with a link to download it. You can turn that off in Settings.</p>
+      </section>
+
+      <div class="glass close">
+        <h2>Ready to know your number?</h2>
+        <p class="muted" style="margin-inline:auto">It takes a minute to set up. Then it is one number a day.</p>
+        <a class="btn" href="https://github.com/tanim913/bluecoins/releases/latest">Download for Android</a>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <a href="privacy.html">Privacy policy</a><a href="delete-account.html">Delete your account</a><a href="https://github.com/tanim913/bluecoins">Source code</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Try-it demo: the same sums the app does (sample month: opened with 125,000, budget 60,000, day 18 of 30).
+  var OPEN = 125000, BUDGET = 60000, DONE = 18, LEFT = 12;
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return Math.round(n).toLocaleString("en-US"); };
+  function parse(v) {
+    var s = v.replace(/[,\s]/g, "");
+    if (!/^\d+(\.\d+)?([+\-]\d+(\.\d+)?)*$/.test(s)) return null;
+    return s.match(/[+\-]?\d+(\.\d+)?/g).reduce(function (a, t) { return a + parseFloat(t); }, 0);
+  }
+  function update() {
+    var bal = parse($("bal").value);
+    if (bal === null) { $("lead").textContent = "Type a number, like 80000"; $("big").textContent = "–"; $("tail").textContent = ""; return; }
+    var spent = Math.max(0, OPEN - bal), left = BUDGET - spent, over = left < 0;
+    $("lead").textContent = over ? "You are over budget by" : "You can spend";
+    $("big").textContent = fmt(over ? -left : left / LEFT);
+    $("tail").textContent = over ? "this month" : "a day for the next " + LEFT + " days";
+    $("spent").textContent = fmt(spent);
+    $("avg").textContent = fmt(spent / DONE);
+    var pct = Math.min(100, spent / BUDGET * 100), fill = $("fill");
+    fill.style.transform = "scaleX(" + pct / 100 + ")";
+    fill.className = pct > 60 ? "warn" : "";
+    var ahead = spent - BUDGET * DONE / 30;
+    $("pace").textContent = ahead > 0 ? fmt(ahead) + " ahead of pace" : fmt(-ahead) + " under pace";
+    $("barwrap").setAttribute("aria-label", Math.round(pct) + " percent of the budget spent");
+  }
+  $("bal").addEventListener("input", update);
+  update();
+
+  // Highlight the question being read in the sticky index.
+  var links = {}, secs = document.querySelectorAll("section.q");
+  document.querySelectorAll(".qnav a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        Object.keys(links).forEach(function (k) { links[k].removeAttribute("aria-current"); });
+        if (links[e.target.id]) links[e.target.id].setAttribute("aria-current", "true");
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    secs.forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
 </body>
 </html>

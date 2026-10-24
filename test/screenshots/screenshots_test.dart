@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:bluecoins/core/day.dart';
+import 'package:bluecoins/data/database.dart';
 import 'package:bluecoins/domain/ledger/models.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,6 +14,12 @@ import '../support/harness.dart';
 Future<void> _richSeed(Harness h) async {
   final s = h.store;
   await h.seed();
+  await s.saveSettings(
+    const SettingsCompanion(
+      displayName: Value('Sam'),
+      gender: Value('private'),
+    ),
+  );
   await s.saveCheckin(day(2026, 5, 6), 14730000);
   await s.saveIncome(Income(day(2026, 5, 6), 5100000, source: 'bonus'));
   await s.saveCheckin(day(2026, 5, 12), 12800000);
@@ -64,6 +72,8 @@ void main() {
       await h.writeScreenshot('$out/phone-$name-insights-scrolled.png');
       await h.tap(find.text('More').last);
       await h.writeScreenshot('$out/phone-$name-more.png');
+      await h.tap(find.text('Sam').first);
+      await h.writeScreenshot('$out/phone-$name-profile.png');
       debugDisableShadows = true; // the test binding checks it is restored
       await h.dispose();
     });
