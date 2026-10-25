@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- New app icon: a glass tile with a wallet and banknotes.
 - Renamed the app from "Bluecoins" to **Enough** (an unrelated app called Bluecoins Finance already
   exists). The app ID, your data, backups and sign-in are unchanged, so it updates in place. New icon letter.
 

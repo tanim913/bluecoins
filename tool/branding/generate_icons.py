@@ -1,76 +1,23 @@
 #!/usr/bin/env python3
-"""Renders every launcher icon from one mark: a glass coin with a navy E on the app's deep navy ground.
+"""Renders every launcher icon from tool/branding/icon-source.jpg: a glass tile with a wallet and
+banknotes on deep navy.
 
 Run from the repo root:  python3 tool/branding/generate_icons.py
-Needs Pillow. The letter uses the bundled Noto Sans Bold (SIL OFL).
-Android only: the app is not built for iOS yet.
+Needs Pillow and numpy. Android only: the app is not built for iOS yet.
 """
 import os
 import numpy as np
-from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw
 
-NAVY, SKY = (0x2B, 0x38, 0x5A), (0x73, 0xB7, 0xF1)
-NAVY_DEEP = (0x14, 0x20, 0x4A)
-FONT = "assets/fonts/NotoSans-Bold.ttf"
+SRC = "tool/branding/icon-source.jpg"
 RES = "android/app/src/main/res"
-SS = 4  # draw 4x and scale down for smooth edges
+CX, CY, TILE = 622, 619, 959  # centre and width of the glass tile inside the 1254px source
+
+src = Image.open(SRC).convert("RGB")
 
 
-def ground(size):
-    """Deep navy with a soft glow at the top right, like the app's own backdrop."""
-    y, x = np.mgrid[0:size, 0:size] / (size - 1)
-    base = np.array((0x0A, 0x10, 0x24), float)
-    glow = np.array((0x3D, 0x4B, 0x78), float)
-    t = np.clip(1.1 - np.hypot(x - 0.85, y - 0.1) * 1.3, 0, 1)[..., None]
-    rgb = base + (glow - base) * t
-    a = np.clip(0.9 - np.hypot(x - 0.1, y - 0.55) * 1.4, 0, 1)[..., None] * 0.18
-    rgb = rgb + (np.array(SKY, float) - rgb) * a
-    return Image.fromarray(rgb.astype("uint8"), "RGB").convert("RGBA")
-
-
-def mark(size, coin=0.62, shadow=True, mono=False):
-    """A glass coin: lit sky-blue gradient, bright rim, specular crescent, soft shadow."""
-    s = size * SS
-    c = s / 2
-    r = s * coin / 2
-    out = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    disc = Image.new("L", (s, s), 0)
-    ImageDraw.Draw(disc).ellipse((c - r, c - r, c + r, c + r), fill=255)
-    if shadow and not mono:
-        sh = Image.new("L", (s, s), 0)
-        ImageDraw.Draw(sh).ellipse((c - r * 0.92, c - r * 0.92 + r * 0.16, c + r * 0.92, c + r * 0.92 + r * 0.16), fill=150)
-        sh = sh.filter(ImageFilter.GaussianBlur(r * 0.12))
-        out.paste(Image.new("RGBA", (s, s), (3, 6, 20, 255)), (0, 0), sh)
-    y, x = np.mgrid[0:s, 0:s] / (s - 1)
-    t = np.clip(((x - 0.5) * 0.6 + (y - 0.5) * 0.8) / (coin * 1.0) + 0.5, 0, 1)[..., None]
-    top, mid, bot = np.array((0xC9, 0xE6, 0xFF), float), np.array(SKY, float), np.array((0x3F, 0x84, 0xD0), float)
-    rgb = np.where(t < 0.5, top + (mid - top) * (t * 2), mid + (bot - mid) * ((t - 0.5) * 2))
-    if mono:
-        rgb = np.full_like(rgb, 255)
-    face = Image.fromarray(rgb.astype("uint8"), "RGB").convert("RGBA")
-    out.paste(face, (0, 0), disc)
-    layer = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    d = ImageDraw.Draw(layer)
-    if not mono:
-        w = max(2, int(r * 0.035))
-        d.ellipse((c - r, c - r, c + r, c + r), outline=(255, 255, 255, 190), width=w)
-        ring = r * 0.80
-        d.ellipse((c - ring, c - ring, c + ring, c + ring), outline=(255, 255, 255, 90), width=max(2, int(r * 0.025)))
-        spec = Image.new("L", (s, s), 0)
-        ImageDraw.Draw(spec).ellipse((c - r * 0.9, c - r * 1.05, c + r * 0.55, c - r * 0.1), fill=110)
-        spec = ImageChops.multiply(spec.filter(ImageFilter.GaussianBlur(r * 0.08)), disc)
-        glint = Image.new("RGBA", (s, s), (255, 255, 255, 255))
-        glint.putalpha(spec)
-        layer = Image.alpha_composite(layer, glint)
-    out = Image.alpha_composite(out, layer)
-    font = ImageFont.truetype(FONT, int(r * 1.12))
-    letter = Image.new("L", (s, s), 0)
-    ImageDraw.Draw(letter).text((c, c + r * 0.02), "E", font=font, anchor="mm", fill=255)
-    if mono:  # themed icon: the letter is a hole
-        out.putalpha(ImageChops.subtract(out.getchannel("A"), letter))
-    else:
-        out.paste(Image.new("RGBA", (s, s), NAVY_DEEP + (255,)), (0, 0), letter.point(lambda v: int(v * 0.92)))
-    return out.resize((size, size), Image.LANCZOS)
+def crop(half):
+    return src.crop((CX - half, CY - half, CX + half, CY + half))
 
 
 def save(img, path):
@@ -78,26 +25,45 @@ def save(img, path):
     img.save(path)
 
 
-def rounded(img, radius_frac):
-    size = img.size[0]
-    m = Image.new("L", (size * SS, size * SS), 0)
-    ImageDraw.Draw(m).rounded_rectangle((0, 0, size * SS - 1, size * SS - 1), radius=int(size * SS * radius_frac), fill=255)
-    m = m.resize((size, size), Image.LANCZOS)
-    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    out.paste(img, (0, 0), m)
+def rounded(img, frac):
+    n = img.size[0]
+    m = Image.new("L", (n * 4, n * 4), 0)
+    ImageDraw.Draw(m).rounded_rectangle((0, 0, n * 4 - 1, n * 4 - 1), radius=int(n * 4 * frac), fill=255)
+    out = Image.new("RGBA", (n, n), (0, 0, 0, 0))
+    out.paste(img, (0, 0), m.resize((n, n), Image.LANCZOS))
     return out
+
+
+# Mean colour of the source's outer ring: the adaptive background, hidden behind the tile.
+a = np.asarray(src).astype(float)
+ring = np.concatenate([a[:20].reshape(-1, 3), a[-20:].reshape(-1, 3), a[:, :20].reshape(-1, 3), a[:, -20:].reshape(-1, 3)])
+BG = tuple(int(v) for v in ring.mean(0))
+
+# Adaptive layers are 108dp; the tile gets 60dp so no launcher mask (circle, squircle) trims it.
+SCALE = 60 / TILE  # dp per source pixel
+
+
+def foreground(px, mono=False):
+    canvas = Image.new("RGBA", (px, px), (0, 0, 0, 0))
+    w = int(src.size[0] * SCALE * px / 108)
+    layer = src.resize((w, w), Image.LANCZOS)
+    off = (px - w) // 2 + int((src.size[0] / 2 - CX) * SCALE * px / 108), (px - w) // 2 + int((src.size[1] / 2 - CY) * SCALE * px / 108)
+    if mono:  # themed icon: brightness of the glass becomes the shape, drawn in white
+        lum = np.asarray(layer.convert("L")).astype(float)
+        alpha = np.clip((lum - 45) / 110, 0, 1) * 255
+        layer = Image.merge("RGBA", (*(Image.new("L", layer.size, 255),) * 3, Image.fromarray(alpha.astype("uint8"))))
+    canvas.paste(layer, off, layer if mono else None)
+    return canvas
 
 
 densities = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
 for name, k in densities.items():
     d = f"{RES}/mipmap-{name}"
-    legacy = int(48 * k)
-    plate = Image.alpha_composite(ground(legacy), mark(legacy, coin=0.66))
-    save(rounded(plate, 0.22), f"{d}/ic_launcher.png")
+    save(rounded(crop(560).resize((int(48 * k),) * 2, Image.LANCZOS), 0.22), f"{d}/ic_launcher.png")
     fg = int(108 * k)
-    save(ground(fg), f"{d}/ic_launcher_background.png")
-    save(mark(fg, coin=0.50), f"{d}/ic_launcher_foreground.png")  # inside the 66dp safe zone
-    save(mark(fg, coin=0.50, mono=True), f"{d}/ic_launcher_monochrome.png")
+    save(Image.new("RGB", (fg, fg), BG), f"{d}/ic_launcher_background.png")
+    save(foreground(fg), f"{d}/ic_launcher_foreground.png")
+    save(foreground(fg, mono=True), f"{d}/ic_launcher_monochrome.png")
 
 os.makedirs(f"{RES}/mipmap-anydpi-v26", exist_ok=True)
 open(f"{RES}/mipmap-anydpi-v26/ic_launcher.xml", "w").write(
@@ -109,7 +75,7 @@ open(f"{RES}/mipmap-anydpi-v26/ic_launcher.xml", "w").write(
 </adaptive-icon>
 """
 )
-if os.path.exists(f"{RES}/values/ic_launcher_background.xml"):
-    os.remove(f"{RES}/values/ic_launcher_background.xml")  # replaced by the mipmap background
-save(Image.alpha_composite(ground(512), mark(512, coin=0.66)).convert("RGB"), "docs/store/play_icon_512.png")
+store = crop(620).resize((512, 512), Image.LANCZOS)
+save(store, "docs/store/play_icon_512.png")
+save(store.resize((256, 256), Image.LANCZOS), "docs/icon.png")
 print("icons written")
