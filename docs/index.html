@@ -20,9 +20,21 @@
 <link rel="icon" href="icon.png">
 <link rel="preload" href="fonts/NotoSans-Regular.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="landing.css">
 </head>
-<body>
+<body class="landing" id="top">
 <a class="skip" href="#what">Skip to the answers</a>
+
+<div class="topbar">
+  <a class="brand" href="#top"><img src="icon.png" width="30" height="30" alt=""><span>Enough</span></a>
+  <nav aria-label="Main">
+    <a href="#what">How it works</a>
+    <a href="#who">Who it is for</a>
+    <a href="#safe">Privacy</a>
+    <a href="#install">Install</a>
+  </nav>
+  <a class="btn" href="https://github.com/tanim913/bluecoins/releases/latest">Download</a>
+</div>
 
 <div class="wrap">
   <header class="hero">
@@ -35,7 +47,7 @@
       <p class="fine">Free, open source, no ads, no bank login, and it works without internet. Android 7 or newer.</p>
     </div>
     <div class="hero-shot">
-      <img class="phone" src="shots/home.jpg" width="400" height="800" alt="The Home screen: 'Good morning, Sam. You can spend 900 a day for the next 12 days', with a progress bar and today's balance box">
+      <span class="frame"><img class="phone" src="shots/home.jpg" width="400" height="800" alt="The Home screen: 'Good morning, Sam. You can spend 900 a day for the next 12 days', with a progress bar and today's balance box"></span>
     </div>
   </header>
 
@@ -102,10 +114,10 @@
         <h2>What will I see?</h2>
         <p class="answer">The answer first, the detail one tap away.</p>
         <div class="tour">
-          <figure><img class="phone" src="shots/home.jpg" width="400" height="800" alt="Home screen with the daily allowance and progress bar"><figcaption><b>Home</b>What you can spend today, and your pace.</figcaption></figure>
-          <figure><img class="phone" src="shots/insights.jpg" width="400" height="800" alt="Insights screen with cycle summary and spend-per-day chart"><figcaption><b>Insights</b>Spending per day, savings and each cycle.</figcaption></figure>
-          <figure><img class="phone" src="shots/history.jpg" width="400" height="800" alt="History screen listing balances, incomes and expenses"><figcaption><b>History</b>Fix or delete any entry. Everything recalculates.</figcaption></figure>
-          <figure><img class="phone" src="shots/profile.jpg" width="400" height="800" alt="Profile screen with name, gender and photo"><figcaption><b>Profile</b>Your name and photo. The photo never leaves your phone.</figcaption></figure>
+          <figure><span class="frame"><img class="phone" src="shots/home.jpg" width="400" height="800" alt="Home screen with the daily allowance and progress bar"></span><figcaption><b>Home</b>What you can spend today, and your pace.</figcaption></figure>
+          <figure><span class="frame"><img class="phone" src="shots/insights.jpg" width="400" height="800" alt="Insights screen with cycle summary and spend-per-day chart"></span><figcaption><b>Insights</b>Spending per day, savings and each cycle.</figcaption></figure>
+          <figure><span class="frame"><img class="phone" src="shots/history.jpg" width="400" height="800" alt="History screen listing balances, incomes and expenses"></span><figcaption><b>History</b>Fix or delete any entry. Everything recalculates.</figcaption></figure>
+          <figure><span class="frame"><img class="phone" src="shots/profile.jpg" width="400" height="800" alt="Profile screen with name, gender and photo"></span><figcaption><b>Profile</b>Your name and photo. The photo never leaves your phone.</figcaption></figure>
         </div>
         <p class="muted">Also inside: a what-if tool that never saves, a list of bills to pay, charts, Excel export, a daily reminder, and a fingerprint or PIN lock. Screenshots show sample data.</p>
       </section>
